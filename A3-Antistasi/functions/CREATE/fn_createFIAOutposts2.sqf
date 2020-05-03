@@ -35,7 +35,7 @@ if (_isRoad) then
 		_veh = vehSDKLightArmed createVehicle getPos (_road select 0);
 		_veh setDir _dirveh + 90;
 		_veh lock 3;
-		_nul = [_veh] call A3A_fnc_AIVEHinit;
+		[_veh, teamPlayer, false] call A3A_fnc_AIVEHinit;
 		sleep 1;
 		};
 	_groupX = [_positionX, teamPlayer, _garrison,true,false] call A3A_fnc_spawnGroup;

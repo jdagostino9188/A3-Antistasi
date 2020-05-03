@@ -62,7 +62,7 @@ if (_frontierX) then
 		_typeUnit = if (_sideX==Occupants) then {staticCrewOccupants} else {staticCrewInvaders};
 		_unit = [_groupX, _typeUnit, _positionX, [], 0, "NONE"] call A3A_fnc_createUnit;
 		[_unit,_markerX] call A3A_fnc_NATOinit;
-		[_veh] call A3A_fnc_AIVEHinit;
+		[_veh, _sideX, true] call A3A_fnc_AIVEHinit;
 		_unit moveInGunner _veh;
 		_soldiers pushBack _unit;
 
@@ -194,7 +194,7 @@ if (_spawnParameter isEqualType []) then
 	_veh = createVehicle [selectRandom _typeVehX, (_spawnParameter select 0), [], 0, "NONE"];
 	_veh setDir (_spawnParameter select 1);
 	_vehiclesX pushBack _veh;
-	_nul = [_veh] call A3A_fnc_AIVEHinit;
+	_nul = [_veh, _sideX, true] call A3A_fnc_AIVEHinit;
 	sleep 1;
 };
 
@@ -255,9 +255,5 @@ deleteMarker _mrk;
 } forEach _groups;
 
 {
-	//distanceSPWN - _size? Shouldn't it be distanceSPWN + _size
-	if (!([distanceSPWN-_size,1,_x,teamPlayer] call A3A_fnc_distanceUnits)) then
-	{
-		deleteVehicle _x;
-	}
+	if (_x getVariable ["ownerSide", _sideX] == _sideX) then { deleteVehicle _x };
 } forEach _vehiclesX;

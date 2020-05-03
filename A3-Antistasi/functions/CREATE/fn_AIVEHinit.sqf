@@ -13,10 +13,11 @@
 params ["_veh", "_side", ["_noDespawn"]];
 
 if (isNil "_veh") exitWith {};
-if ((_veh isKindOf "FlagCarrier") or (_veh isKindOf "Building") or (_veh isKindOf "ReammoBox_F")) exitWith {};
-//if (_veh isKindOf "ReammoBox_F") exitWith {[_veh] call A3A_fnc_NATOcrate};
 
 _veh setVariable ["sideOwner", _side, true];
+
+if ((_veh isKindOf "FlagCarrier") or (_veh isKindOf "Building") or (_veh isKindOf "ReammoBox_F")) exitWith {};
+//if (_veh isKindOf "ReammoBox_F") exitWith {[_veh] call A3A_fnc_NATOcrate};
 
 private _typeX = typeOf _veh;
 
