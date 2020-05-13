@@ -258,7 +258,7 @@ if (_vehR distance _heli < 50) then
 		[3, format ["%1, %2 are RTB", _pilots, _guard], _filename] call A3A_fnc_log;
 		deleteWaypoint [_pilots, 1];
 		if (!isNil "_guard") then {deleteWaypoint [_guard, 1]};
-
+		
 		_pilots addVehicle _heli;
 		(units _pilots) orderGetIn true;
 		sleep 1;
@@ -324,12 +324,13 @@ if ((not alive _heli) || (_heli distance _posHQ < 100) ) then {
 	[1800*_bonus, _sideX] remoteExec ["A3A_fnc_timingCA",2];
 	{if (_x distance _heli < 500) then {[10*_bonus,_x] call A3A_fnc_playerScoreAdd}} forEach (allPlayers - (entities "HeadlessClient_F"));
 	[5*_bonus,theBoss] call A3A_fnc_playerScoreAdd;
-	if (_typeVehH in (vehNATOAttackHelis + vehCSATAttackHelis)) then {[600*_bonus, _sideX] remoteExec ["A3A_fnc_timingCA",2]};
+	if (_typeVehH in (vehNATOAttackHelis + vehCSATAttackHelis)) then {[600*_bonus] remoteExec ["A3A_fnc_timingCA",2]};
 } else {
 	[3, format ["%1 was successfully recovered by %2, mission failed", _heli, _sideX], _filename] call A3A_fnc_log;
 	["DES",[_text,"Downed Heli",_taskMrk],_posCrashMrk,"FAILED","Destroy"] call A3A_fnc_taskUpdate;
+	[-600*_bonus, _sideX] remoteExec ["A3A_fnc_timingCA",2];
 	[-10*_bonus,theBoss] call A3A_fnc_playerScoreAdd;
-	if (_typeVehH in (vehNATOAttackHelis + vehCSATAttackHelis)) then {[-600*_bonus, _sideX] remoteExec ["A3A_fnc_timingCA",2]};
+	if (_typeVehH in (vehNATOAttackHelis + vehCSATAttackHelis)) then {[-600*_bonus] remoteExec ["A3A_fnc_timingCA",2]};
 };
 [2, format ["Downed Heli mission completed"], _filename] call A3A_fnc_log;
 ////////////
