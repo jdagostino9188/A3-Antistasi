@@ -1,6 +1,6 @@
 /*
 	Installs various damage/smoke/kill/capture logic for vehicles
-	Will set and modify the "ownerSide" variable on the vehicle indicating side ownership
+	Will set and modify the "originalSide" and "ownerSide" variables on the vehicle indicating side ownership
 	If a rebel enters a vehicle, it will be switched to rebel side and added to vehDespawner
 	
 	Params:
@@ -19,6 +19,7 @@ if !(isNil { _veh getVariable "ownerSide" }) exitWith
 	_veh setVariable ["ownerSide", _side, true];
 };
 
+_veh setVariable ["originalSide", _side, true];
 _veh setVariable ["ownerSide", _side, true];
 
 // probably just shouldn't be called for these

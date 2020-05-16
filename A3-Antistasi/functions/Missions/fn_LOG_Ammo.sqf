@@ -76,11 +76,10 @@ if ((spawner getVariable _markerX != 2) and !(sidesX getVariable [_markerX,sideU
 	};
 
 	_truckX setVariable ["ammoTruckLocation", _nameDest];
-	_truckX setVariable ["ammoSideOwner", _sideX];
 	_truckX addEventHandler ["GetIn", {
 		params ["_vehicle", "_role", "_unit", "_turret"];
 
-		private _owningSide = (_vehicle getVariable "ammoSideOwner");
+		private _owningSide = (_vehicle getVariable "originalSide");		// set by AIVEHinit
 
 		if (_unit getVariable ["spawner",false]) then {
 			["TaskFailed", ["", format ["Ammotruck Stolen in an %1",(_vehicle getVariable ["ammoTruckLocation", ""])]]] remoteExec ["BIS_fnc_showNotification",_owningSide];
