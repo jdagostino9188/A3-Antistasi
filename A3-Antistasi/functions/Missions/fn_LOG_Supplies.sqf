@@ -42,7 +42,7 @@ _truckX addAction ["Delivery infos",
 	"",
 	"(isPlayer _this) and (_this == _this getVariable ['owner',objNull])"
 ];
-[_truckX] call A3A_fnc_AIVEHinit;
+[_truckX, teamPlayer] call A3A_fnc_AIVEHinit;
 //{_x reveal _truckX} forEach (allPlayers - (entities "HeadlessClient_F"));
 _truckX setVariable ["destinationX",_nameDest,true];
 

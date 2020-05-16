@@ -31,12 +31,35 @@ if (_side == Occupants or _side == Invaders) then
 	
 	if (_side == Occupants) then {
 		[-_value/3, _value/3, position _veh] remoteExec ["A3A_fnc_citySupportChange", 2];
-		[[_value, 15], [0, 0]] remoteExec ["A3A_fnc_prestige",2];
+		[[_value, 15], [0, 0]] remoteExec ["A3A_fnc_prestige", 2];
 	}
 	else {
-		[[0, 0], [_value, 15]] remoteExec ["A3A_fnc_prestige",2];
+		[[0, 0], [_value, 15]] remoteExec ["A3A_fnc_prestige", 2];
 	};
 };
 
-// maybe have an adjustment for stealing civ vehicles here?
-// it's somewhere else at the moment
+if (_side == civilian) then 
+{
+	if (_sideEnemy != teamPlayer) exitWith {};
+
+	_pos = position _veh;
+	[0, -1, _pos] remoteExec ["A3A_fnc_citySupportChange", 2];
+
+	_city = [citiesX, _pos] call BIS_fnc_nearestPosition;
+	_dataX = server getVariable _city;
+	_prestigeOPFOR = _dataX select 2;
+	if (random 100 > _prestigeOPFOR) exitWith {};
+
+	spawn {
+		{
+			private _thief = _x;
+			if ((captive _thief) and (isPlayer _thief)) then
+			{
+				[_thief, false] remoteExec ["setCaptive", _thief];
+			};
+			{
+				if ((side _x == Occupants) and (_x distance _pos < distanceSPWN2)) then {_x reveal _thief};
+			} forEach allUnits;
+		} forEach crew _veh;
+	};
+};

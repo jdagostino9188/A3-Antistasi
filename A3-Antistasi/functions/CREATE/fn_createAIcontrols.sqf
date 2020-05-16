@@ -96,7 +96,7 @@ if (_isControl) then
 			_unit moveInGunner _veh;
 			_soldiers pushBack _unit;
 			sleep 1;
-			{[_x, _sideX, true] call A3A_fnc_AIVEHinit} forEach _vehiclesX;
+			{ [_x, _sideX] call A3A_fnc_AIVEHinit } forEach _vehiclesX;
 			};
 		_typeGroup = if (_sideX == Occupants) then {selectRandom groupsNATOmid} else {selectRandom groupsCSATmid};
 		_groupX = [_positionX,_sideX, _typeGroup, true] call A3A_fnc_spawnGroup;
@@ -121,7 +121,7 @@ if (_isControl) then
 		_typeVehX = if !(hasIFA) then {vehFIAArmedCar} else {vehFIACar};
 		_veh = _typeVehX createVehicle getPos (_roads select 0);
 		_veh setDir _dirveh + 90;
-		[_veh, _sideX, true] call A3A_fnc_AIVEHinit;
+		[_veh, _sideX] call A3A_fnc_AIVEHinit;
 		_vehiclesX pushBack _veh;
 		sleep 1;
 		_typeGroup = selectRandom groupsFIAMid;
@@ -259,18 +259,15 @@ if (spawner getVariable _markerX != 2) then
 
 waitUntil {sleep 1;(spawner getVariable _markerX == 2)};
 
-{
-	if (_x getVariable ["ownerSide", _sideX] == _sideX) then { deleteVehicle _x };
-} forEach _vehiclesX;
+
+{ if (alive _x) then { deleteVehicle _x } forEach (_soldiers + _pilots);
+deleteGroup _groupX;
 
 {
-if (alive _x) then
-	{
-	if (_x != vehicle _x) then {deleteVehicle (vehicle _x)};
-	deleteVehicle _x
-	}
-} forEach (_soldiers + _pilots);
-deleteGroup _groupX;
+	// delete all vehicles that haven't been captured
+	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
+} forEach _vehiclesX;
+
 
 if (_conquered) then
 	{

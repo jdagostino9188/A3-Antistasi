@@ -62,7 +62,7 @@ if (_frontierX) then
 		_typeUnit = if (_sideX==Occupants) then {staticCrewOccupants} else {staticCrewInvaders};
 		_unit = [_groupX, _typeUnit, _positionX, [], 0, "NONE"] call A3A_fnc_createUnit;
 		[_unit,_markerX] call A3A_fnc_NATOinit;
-		[_veh, _sideX, true] call A3A_fnc_AIVEHinit;
+		[_veh, _sideX] call A3A_fnc_AIVEHinit;
 		_unit moveInGunner _veh;
 		_soldiers pushBack _unit;
 
@@ -194,7 +194,7 @@ if (_spawnParameter isEqualType []) then
 	_veh = createVehicle [selectRandom _typeVehX, (_spawnParameter select 0), [], 0, "NONE"];
 	_veh setDir (_spawnParameter select 1);
 	_vehiclesX pushBack _veh;
-	_nul = [_veh, _sideX, true] call A3A_fnc_AIVEHinit;
+	[_veh, _sideX] call A3A_fnc_AIVEHinit;
 	sleep 1;
 };
 
@@ -239,21 +239,12 @@ waitUntil {sleep 1; (spawner getVariable _markerX == 2)};
 [_markerX] call A3A_fnc_freeSpawnPositions;
 
 deleteMarker _mrk;
-{
-	if (alive _x) then
-	{
-		deleteVehicle _x
-	};
-} forEach _soldiers;
-//if (!isNull _periodista) then {deleteVehicle _periodista};
-//Deleting civs before deleting groups
-{
-	deleteVehicle _x
-} forEach _civs;
-{
-	deleteGroup _x
-} forEach _groups;
+
+{ if (alive _x) then { deleteVehicle _x } } forEach _soldiers;
+{ deleteVehicle _x } forEach _civs;
+{ deleteGroup _x } forEach _groups;
 
 {
-	if (_x getVariable ["ownerSide", _sideX] == _sideX) then { deleteVehicle _x };
+	// delete all vehicles that haven't been captured
+	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
 } forEach _vehiclesX;
