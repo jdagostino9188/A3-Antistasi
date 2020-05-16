@@ -122,6 +122,7 @@ _ret = [_markerX,_size,_sideX,_frontierX] call A3A_fnc_milBuildings;
 _groups pushBack (_ret select 0);
 _vehiclesX append (_ret select 1);
 _soldiers append (_ret select 2);
+{ [_x, _sideX] call A3A_fnc_AIVEHinit } forEach _vehiclesX;
 
 if(random 100 < (40 + tierWar * 3)) then
 {
@@ -135,20 +136,12 @@ _flagX allowDamage false;
 [_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
 _vehiclesX pushBack _flagX;
 
-_boxX = objNull;
-if (_sideX == Occupants) then
-{
-	_boxX = NATOAmmoBox createVehicle _positionX;
-	[_boxX] spawn A3A_fnc_fillLootCrate;
-}
-else
-{
-	_boxX = CSATAmmoBox createVehicle _positionX;
-	[_boxX] spawn A3A_fnc_fillLootCrate;
-};
-_vehiclesX pushBack _boxX;
-_boxX call jn_fnc_logistics_addAction;
-{ [_x, _sideX] call A3A_fnc_AIVEHinit } forEach _vehiclesX;
+// keep this out of _vehiclesX as it has different despawn rules
+private _ammoBoxType = if (_sideX == Occupants) then {NATOAmmoBox} else {CSATAmmoBox};
+private _ammoBox = _ammoBoxType createVehicle _positionX;
+[_ammoBox] spawn A3A_fnc_fillLootCrate;
+_ammoBox call jn_fnc_logistics_addAction;
+
 _roads = _positionX nearRoads _size;
 
 if ((_markerX in seaports) and !hasIFA) then
@@ -177,7 +170,7 @@ if ((_markerX in seaports) and !hasIFA) then
 		};
 	};
 	{
-		_boxX addItemCargoGlobal [_x,2]
+		_ammoBox addItemCargoGlobal [_x,2]
 	} forEach diveGear;
 }
 else
@@ -341,8 +334,8 @@ for "_i" from 0 to (count _array - 1) do
 
 if (_markerX in seaports) then
 	{
-	_boxX addItemCargo ["V_RebreatherIA",round random 5];
-	_boxX addItemCargo ["G_I_Diving",round random 5];
+	_ammoBox addItemCargo ["V_RebreatherIA",round random 5];
+	_ammoBox addItemCargo ["G_I_Diving",round random 5];
 	};
 
 waitUntil {sleep 1; (spawner getVariable _markerX == 2)};
@@ -359,3 +352,6 @@ deleteMarker _mrk;
 	// delete all vehicles that haven't been captured
 	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
 } forEach _vehiclesX;
+
+// Delete ammobox if it's within 200m
+if (_ammoBox distance2d _positionX < 200) then { deleteVehicle _ammoBox };

@@ -119,11 +119,10 @@ else
 _ecpos = getpos _truckX;
 deleteVehicle _truckX;
 _emptybox = "Land_PaperBox_01_open_empty_F" createVehicle _ecpos;
+[_emptybox] spawn A3A_fnc_postmortem;
 
 //sleep (600 + random 1200);
 
 //_nul = [_tsk,true] call BIS_fnc_deleteTask;
 _nul = [1200,"LOG"] spawn A3A_fnc_deleteTask;
-waitUntil {sleep 1; (not([distanceSPWN,1,_truckX,teamPlayer] call A3A_fnc_distanceUnits)) or (_truckX distance (getMarkerPos respawnTeamPlayer) < 60)};
 
-deleteVehicle _emptybox;

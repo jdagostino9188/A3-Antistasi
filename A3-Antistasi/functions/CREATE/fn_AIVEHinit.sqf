@@ -9,7 +9,7 @@
 */
 
 private _filename = "fn_AIVEHinit";
-params ["_veh", "_side", ["_noDespawn"]];
+params ["_veh", "_side"];
 if (isNil "_veh") exitWith {};
 
 if !(isNil { _veh getVariable "ownerSide" }) exitWith

@@ -320,20 +320,12 @@ _flagX = createVehicle [_typeVehX, _positionX, [],0, "NONE"];
 _flagX allowDamage false;
 [_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
 _vehiclesX pushBack _flagX;
-if (_sideX == Occupants) then
-{
-	_veh = NATOAmmoBox createVehicle _positionX;
-	[_veh] spawn A3A_fnc_fillLootCrate;
-	_vehiclesX pushBack _veh;
-	_veh call jn_fnc_logistics_addAction;
-}
-else
-{
-	_veh = CSATAmmoBox createVehicle _positionX;
-	[_veh] spawn A3A_fnc_fillLootCrate;
-	_vehiclesX pushBack _veh;
-	_veh call jn_fnc_logistics_addAction;
-};
+
+// keep this out of _vehiclesX as it has different despawn rules
+private _ammoBoxType = if (_sideX == Occupants) then {NATOAmmoBox} else {CSATAmmoBox};
+private _ammoBox = _ammoBoxType createVehicle _positionX;
+[_ammoBox] spawn A3A_fnc_fillLootCrate;
+_ammoBox call jn_fnc_logistics_addAction;
 
 if (!_busy) then
 {
@@ -405,3 +397,6 @@ deleteMarker _mrk;
 	// delete all vehicles that haven't been captured
 	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
 } forEach _vehiclesX;
+
+// Delete ammobox if it's within 200m. Magic number bad.
+if (_ammoBox distance2d _positionX < 200) then { deleteVehicle _ammoBox };
