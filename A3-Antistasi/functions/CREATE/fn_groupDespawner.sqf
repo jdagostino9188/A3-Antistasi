@@ -5,7 +5,7 @@ if (count units _group == 0) exitWith { deleteGroup _group };
 
 private _eny1 = Occupants;
 private _eny2 = Invaders;
-private _side = side _groupX;
+private _side = side _group;
 if (_side == Occupants) then {_eny1 = teamPlayer} else {if (_side == Invaders) then {_eny2 = teamPlayer}};
 
 private _fnc_distCheckEnemy = {
@@ -25,7 +25,7 @@ _fnc_distCheck = if (_checkNonRebel) then {_fnc_distCheckEnemy} else {_fnc_distC
 
 while {count units _group > 0} do
 {
-	private _leader;
+	private _leader = objNull;
 	waitUntil {
 		sleep 10;
 		_leader = leader _group;

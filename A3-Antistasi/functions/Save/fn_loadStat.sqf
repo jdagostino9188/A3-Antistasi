@@ -277,7 +277,7 @@ if (_varName in specialVarLoads) then {
 				staticsToSave pushBack _veh;
 			}
 			else {
-				[_veh] call A3A_fnc_vehDespawner;
+				[_veh] spawn A3A_fnc_vehDespawner;
 			};
 		};
 		publicVariable "staticsToSave";

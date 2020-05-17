@@ -603,7 +603,7 @@ else
 		private _wp = _x addWaypoint _posOrigin;
 		_wp setWaypointType "MOVE";
 		_x setCurrentWaypoint _wp;
-	}
+	};
 	[_x] spawn A3A_fnc_groupDespawner;
 } forEach _groups;
 
