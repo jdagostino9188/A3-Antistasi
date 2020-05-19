@@ -600,7 +600,7 @@ else
 // Hand remaining aggressor units to the group despawner.
 {
 	if (!_isMarker || {_markerX in citiesX || sidesX getVariable [_markerX,sideUnknown] != _sideX}) then {
-		private _wp = _x addWaypoint _posOrigin;
+		private _wp = _x addWaypoint [_posOrigin, 50];
 		_wp setWaypointType "MOVE";
 		_x setCurrentWaypoint _wp;
 	};

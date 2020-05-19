@@ -179,7 +179,7 @@ while {alive _veh} do
 	};
 
 { 
-	private _wp = _x addWaypoint (getMarkerPos _base);
+	private _wp = _x addWaypoint [getMarkerPos _base, 50];
 	_wp setWaypointType "MOVE";
 	_x setCurrentWaypoint _wp;
 	[_x] spawn A3A_fnc_groupDespawner;		// this one did care about enemies. Not sure why.

@@ -726,7 +726,7 @@ forcedSpawn = forcedSpawn - [_mrkDestination]; publicVariable "forcedSpawn";
 {
 	// order return to base if it's a city attack or if it was unsuccessful
 	if (_mrkDestination in citiesX || sidesX getVariable [_mrkDestination,sideUnknown] != _sideX) then {
-		private _wp = _x addWaypoint _posOrigin;
+		private _wp = _x addWaypoint [_posOrigin, 50];
 		_wp setWaypointType "MOVE";
 		_x setCurrentWaypoint _wp;
 	};

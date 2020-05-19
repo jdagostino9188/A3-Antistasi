@@ -21,7 +21,7 @@ if (_side == Occupants or _side == Invaders) then
 	_type call A3A_fnc_removeVehFromPool;
 	if (_sideEnemy != teamPlayer) exitWith {};
 
-	private _value = {
+	private _value = call {
 		if (_type in vehAPCs) exitWith {8};
 		if (_type in vehTanks) exitWith {15};
 		if (_type in vehAA or _type in vehMRLS) exitWith {15};

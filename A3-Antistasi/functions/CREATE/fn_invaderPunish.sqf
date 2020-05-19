@@ -187,7 +187,7 @@ publicVariable "bigAttackInProgress";
 
 // Order remaining aggressor units back to base, hand them to the group despawner
 {
-	private _wp = _x addWaypoint _posOrigin;
+	private _wp = _x addWaypoint [_posOrigin, 50];
 	_wp setWaypointType "MOVE";
 	_x setCurrentWaypoint _wp;
 	[_x] spawn A3A_fnc_groupDespawner;

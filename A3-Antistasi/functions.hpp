@@ -231,6 +231,7 @@ class A3A
 		class spawnGroup {};
 		class vehAvailable {};
 		class VEHdespawner {};
+		class vehKilledOrCaptured {};
 		class wavedCA {};
 		class WPCreate {};
 	};

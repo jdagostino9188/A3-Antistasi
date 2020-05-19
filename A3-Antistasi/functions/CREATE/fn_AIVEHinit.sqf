@@ -73,7 +73,7 @@ if ((_typeX in vehNormal) or (_typeX in vehAttack) or (_typeX in vehBoats)) then
 				_veh addEventHandler ["HandleDamage",{if (((_this select 1) find "wheel" != -1) and ((_this select 4=="") or (side (_this select 3) != teamPlayer)) and (!isPlayer driver (_this select 0))) then {0} else {(_this select 2)}}];
 			};
 		};
-	}
+	};
 }
 else
 {
@@ -165,6 +165,20 @@ else
 	};
 };
 
+if (_side == civilian) then
+{
+	_veh addEventHandler ["HandleDamage",{if (((_this select 1) find "wheel" != -1) and (_this select 4=="") and (!isPlayer driver (_this select 0))) then {0;} else {(_this select 2);};}];
+	_veh addEventHandler ["HandleDamage", {
+		_veh = _this select 0;
+		if (side(_this select 3) == teamPlayer) then
+		{
+			_driverX = driver _veh;
+			if (side group _driverX == civilian) then {_driverX leaveVehicle _veh};
+			_veh removeEventHandler ["HandleDamage", _thisEventHandler];
+		};
+	}];
+};
+
 // EH behaviour:
 // GetIn/GetOut/Dammaged: Runs where installed, regardless of locality 
 // Local: Runs where installed if target was local before or after the transition
@@ -182,7 +196,7 @@ if (_side != teamPlayer) then {
 		private _oldside = _veh getVariable ["ownerSide", teamPlayer];
 		if (_oldside != teamPlayer) then
 		{
-			[3, format ["%1 switching side from %2 to rebels", typeof _veh, _oldside], _filename] call A3A_fnc_log;
+			[3, format ["%1 switching side from %2 to rebels", typeof _veh, _oldside], "fn_AIVEHinit"] call A3A_fnc_log;
 			[_veh, teamPlayer, true] call A3A_fnc_vehKilledOrCaptured;
 			_veh setVariable ["ownerSide", teamPlayer, true];
 			if !(_veh isKindOf "StaticWeapon") then { [_veh] spawn A3A_fnc_VEHdespawner };
@@ -191,12 +205,15 @@ if (_side != teamPlayer) then {
 	}];
 };
 
-// Handler to prevent vehDespawner deleting vehicles for half an hour after rebels exit them
+// Handler to prevent vehDespawner deleting vehicles for an hour after rebels exit them
 
 _veh addEventHandler ["GetOut", {
 	params ["_veh", "_role", "_unit"];
+	if !(_unit isEqualType objNull) exitWith {
+		[1, format ["GetOut handler weird input: %1, %2, %3", _veh, _role, _unit], "fn_AIVEHinit"] call A3A_fnc_log;
+	};
 	if (side group _unit == teamPlayer) then {
-		_veh setVariable ["despawnBlockTime", time + 1800];			// despawner always launched locally
+		_veh setVariable ["despawnBlockTime", time + 3600];			// despawner always launched locally
 	};
 }];
 
@@ -206,7 +223,7 @@ _veh addEventHandler ["Dammaged", {
 	params ["_veh", "_selection", "_damage"];
 	if (_damage >= 1 && _selection == "") then {
 		private _killerSide = side group (_this select 5);
-		[3, format ["%1 destroyed by %2", typeof _veh, _killerSide], _filename] call A3A_fnc_log;
+		[3, format ["%1 destroyed by %2", typeof _veh, _killerSide], "fn_AIVEHinit"] call A3A_fnc_log;
 		[_veh, _killerSide, false] call A3A_fnc_vehKilledOrCaptured;
 		[_veh] spawn A3A_fnc_postmortem;
 		_veh removeEventHandler ["Dammaged", _thisEventHandler];
