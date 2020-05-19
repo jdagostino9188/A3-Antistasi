@@ -260,7 +260,7 @@ if (spawner getVariable _markerX != 2) then
 waitUntil {sleep 1;(spawner getVariable _markerX == 2)};
 
 
-{ if (alive _x) then { deleteVehicle _x } forEach (_soldiers + _pilots);
+{ if (alive _x) then { deleteVehicle _x } } forEach (_soldiers + _pilots);
 deleteGroup _groupX;
 
 {
