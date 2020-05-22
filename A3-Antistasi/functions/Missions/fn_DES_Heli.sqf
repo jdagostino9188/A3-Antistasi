@@ -114,7 +114,7 @@ _vehE limitSpeed 50;
 [_vehE,"Escort"] spawn A3A_fnc_inmuneConvoy;
 private _vehCrew = crew _vehE;
 {[_x] call A3A_fnc_NATOinit} forEach _vehCrew;
-[_vehE] call A3A_fnc_AIVEHinit;
+[_vehE, _sideX] call A3A_fnc_AIVEHinit;
 private _groupVeh = _vehicleDataE select 2;
 _groups pushBack _groupVeh;
 _vehicles pushBack _vehE;
@@ -138,7 +138,7 @@ _typeVeh = if (_sideX == Occupants) then {vehNATORepairTruck} else {vehCSATRepai
 private _vehicleDataR = [position _roadR, 0,_typeVeh, _sideX] call bis_fnc_spawnvehicle;
 private _vehR = _vehicleDataR select 0;
 _vehR limitSpeed 50;
-[_vehR] call A3A_fnc_AIVEHinit;
+[_vehR, _sideX] call A3A_fnc_AIVEHinit;
 sleep 1;
 [_vehR,"Repair Truck"] spawn A3A_fnc_inmuneConvoy;
 private _groupVehR = _vehicleDataR select 2;
@@ -187,7 +187,7 @@ if !(_typeVehH == vehNATOPatrolHeli) then {
 		_typeVeh = if (_sideX == Occupants) then {selectRandom vehNATOTrucks} else {selectRandom vehCSATTrucks};
 		private _posVehHT = _posCrash findEmptyPosition [15, 30 ,_typeVeh];
 		_vehGuard = _typeVeh createVehicle _posVehHT;
-		[_vehGuard] call A3A_fnc_AIVEHinit;
+		[_vehGuard, _sideX] call A3A_fnc_AIVEHinit;
 		_vehicles pushBack _vehGuard;
 	};
 };
@@ -197,7 +197,7 @@ _typeGroup = if (_sideX == Occupants) then {[NATOPilot, NATOPilot]} else {[CSATP
 _pilots = [_posCrash,_sideX,_typeGroup] call A3A_fnc_spawnGroup;
 {[_x,""] call A3A_fnc_NATOinit} forEach units _pilots;
 _groups pushBack _pilots;
-[_heli] call A3A_fnc_AIVEHinit;
+[_heli, _sideX] call A3A_fnc_AIVEHinit;
 
 //tell pilots to hide at heli
 private _pilotsWP = _pilots addWaypoint [_posCrash, 0];
@@ -256,7 +256,7 @@ if (_vehR distance _heli < 50) then
 		_escortWP setWaypointBehaviour "SAFE";
 
 		[3, format ["Pilots and Guard are RTB"], _filename] call A3A_fnc_log;
-		
+
 		_pilots addVehicle _heli;
 		(units _pilots) orderGetIn true;
 		sleep 1;
