@@ -1,39 +1,39 @@
 //Deploy action
 canDeployWinch = {
 	private _vehicle = cursorTarget;
-	if(_vehicle isKindOf "Ship") then {	
+	if(_vehicle isKindOf "Ship") then {
 		vehicle player == player && player distance _vehicle < 10 && isNil {_vehicle getVariable "Rope"} && [_vehicle, boxX] call jn_fnc_logistics_canLoad != -3;
 	} else {
 		false;
 	};
-}; 
+};
 
 DeployWinch = {
 	if (captive player) then {player setCaptive false};
 	params ["_player"];
 	private _vehicle = cursorTarget;
-	_vehicle setVariable ["Rope", (ropeCreate [_vehicle, [0,-2.8,-0.8], _player, [0,0,0], 10]), true];
+	_vehicle setVariable ["Rope", (ropeCreate [_vehicle, [0,-2.8,-0.8], _player, [0,0,0], 1]), true];
 	_vehicle setVariable ["RopeUnit", _player, true];
 	[_player, _vehicle] spawn adjustRope;
 };
 
 adjustRope = {
-	params ["_player", "_vehicle"];
-	while {!isNil {_vehicle getVariable "Rope"}} do {
-		private _rope = _vehicle getVariable "Rope";
-		private _dist = _vehicle distance _player;
-		private _optimalDist = _dist + 3;
-		private _maxDist = _dist + 7;
-		if ((ropeLength _rope) < _dist) then {
-			ropeUnwind [_rope, 10, _optimalDist];
-		} else {
-			if ((ropeLength _rope) > _maxDist) then {
-				ropeUnwind [_rope, 10, _optimalDist];
-			};
-		};
-		sleep 0.1;
-	};
-}; 
+    params ["_player", "_vehicle"];
+    while {!isNil {_vehicle getVariable "Rope"}} do {
+        sleep 0.1;
+        private _rope = _vehicle getVariable "Rope";
+        private _dist = _vehicle distance _player;
+        private _optimalDist = _dist + 3;
+        private _maxDist = _dist + 7;
+        if ((ropeLength _rope) < _dist) then {
+            ropeUnwind [_rope, 10, _optimalDist];
+        } else {
+            if ((ropeLength _rope) > _maxDist) then {
+                ropeUnwind [_rope, 10, _optimalDist];
+            };
+        };
+    };
+};
 
 //Stow action
 canStow = {
@@ -51,7 +51,7 @@ stowRope = {
 	ropeDestroy (_vehicle getVariable "Rope");
 	_vehicle setVariable ["Rope",nil,true];
 	_vehicle setVariable ["RopeUnit",nil,true];
-	
+
 };
 
 //Attach action
