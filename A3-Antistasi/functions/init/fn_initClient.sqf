@@ -519,3 +519,8 @@ player setPos (getMarkerPos respawnTeamPlayer);
 enableEnvironment [false, true];
 
 [2,"initClient completed",_fileName] call A3A_fnc_log;
+
+if(!isMultiplayer) then
+{
+    [] spawn A3A_fnc_singlePlayerBlackScreenWarning;
+};

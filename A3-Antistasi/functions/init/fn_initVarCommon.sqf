@@ -90,8 +90,6 @@ hasRDS = false;
 hasACE = false;
 hasACEHearing = false;
 hasACEMedical = false;
-hasADVCPR = false;
-hasADVSplint = false;
 //Radio Mods
 hasACRE = false;
 hasTFAR = false;
@@ -103,8 +101,6 @@ hasACRE = isClass (configFile >> "cfgPatches" >> "acre_main");
 hasACE = (!isNil "ace_common_fnc_isModLoaded");
 hasACEHearing = isClass (configFile >> "CfgSounds" >> "ACE_EarRinging_Weak");
 hasACEMedical = isClass (configFile >> "CfgSounds" >> "ACE_heartbeat_fast_3");
-hasADVCPR = isClass (configFile >> "CfgPatches" >> "adv_aceCPR");
-hasADVSplint = isClass (configFile >> "CfgPatches" >> "adv_aceSplint");
 //IFA Detection
 //Deactivated for now, as IFA is having some IP problems (08.05.2020 european format)
 if isClass (configFile >> "CfgPatches" >> "LIB_Core") then
