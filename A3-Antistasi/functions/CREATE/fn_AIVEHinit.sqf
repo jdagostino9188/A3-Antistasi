@@ -195,6 +195,22 @@ if (_side != teamPlayer) then {
 	}];
 };
 
+if(_veh isKindOf "Air") then
+{
+    //Start airspace control script if rebel player enters
+    _veh addEventHandler
+    [
+        "GetIn",
+        {
+            params ["_veh", "_role", "_unit"];
+            if((side (group _unit) == teamPlayer) && {isPlayer _unit}) then
+            {
+                [_veh] spawn A3A_fnc_airspaceControl;
+            };
+        }
+    ];
+};
+
 // Handler to prevent vehDespawner deleting vehicles for an hour after rebels exit them
 
 _veh addEventHandler ["GetOut", {
