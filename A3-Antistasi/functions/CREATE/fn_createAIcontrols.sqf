@@ -178,6 +178,9 @@ else
 		};
 	};
 if (_leave) exitWith {};
+
+{ _x setVariable ["originalPos", getPos _x] } forEach _vehiclesX;
+
 _spawnStatus = 0;
 while {(spawner getVariable _markerX != 2) and ({[_x,_markerX] call A3A_fnc_canConquer} count _soldiers > 0)} do
 	{
@@ -254,6 +257,7 @@ if (spawner getVariable _markerX != 2) then
 			_nul = [0,5,_positionX] remoteExec ["A3A_fnc_citySupportChange",2];
 			};
 		};
+	if (_winner == teamPlayer) then {[[_positionX,_sideX,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 	};
 
 waitUntil {sleep 1;(spawner getVariable _markerX == 2)};
@@ -264,7 +268,10 @@ deleteGroup _groupX;
 
 {
 	// delete all vehicles that haven't been captured
-	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
+	if (_x getVariable ["ownerSide", _sideX] == _sideX) then {
+		if (_x distance2d (_x getVariable "originalPos") < 100) then { deleteVehicle _x }
+		else { if !(_x isKindOf "StaticWeapon") then { [_x] spawn A3A_fnc_VEHdespawner } };
+	};
 } forEach _vehiclesX;
 
 

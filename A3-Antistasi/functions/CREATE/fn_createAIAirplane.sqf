@@ -321,11 +321,19 @@ _flagX allowDamage false;
 [_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
 _vehiclesX pushBack _flagX;
 
-// keep this out of _vehiclesX as it has different despawn rules
 private _ammoBoxType = if (_sideX == Occupants) then {NATOAmmoBox} else {CSATAmmoBox};
 private _ammoBox = _ammoBoxType createVehicle _positionX;
 [_ammoBox] spawn A3A_fnc_fillLootCrate;
 _ammoBox call jn_fnc_logistics_addAction;
+_vehiclesX pushBack _ammoBox;
+
+[_veh] spawn {
+  sleep 1;
+  _veh = _this select 0;
+  {
+    _veh addItemCargoGlobal [_x, round random [5,15,15]];
+  }forEach flyGear;
+};
 
 if (!_busy) then
 {
@@ -368,6 +376,8 @@ while {_countX < _nVeh && {_countX < 3}} do
 	};
 };
 
+{ _x setVariable ["originalPos", getPos _x] } forEach _vehiclesX;
+
 _array = [];
 _subArray = [];
 _countX = 0;
@@ -394,9 +404,9 @@ deleteMarker _mrk;
 { deleteGroup _x } forEach _groups;
 
 {
-	// delete all vehicles that haven't been captured
-	if !(_x getVariable ["inDespawner", false]) then { deleteVehicle _x };
+	// delete all vehicles that haven't been stolen
+	if (_x getVariable ["ownerSide", _sideX] == _sideX) then {
+		if (_x distance2d (_x getVariable "originalPos") < 100) then { deleteVehicle _x }
+		else { if !(_x isKindOf "StaticWeapon") then { [_x] spawn A3A_fnc_VEHdespawner } };
+	};
 } forEach _vehiclesX;
-
-// Delete ammobox if it's within 200m. Magic number bad.
-if (_ammoBox distance2d _positionX < 200) then { deleteVehicle _ammoBox };
