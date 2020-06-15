@@ -7,12 +7,14 @@ if (not isServer and hasInterface) exitWith {};
 
 params ["_plane", "_bombType", "_bombCount", "_bombRunLength"];
 private _filename = "fn_airbomb";
+private ["_countX","_pilot","_typeX","_ammo","_cluster","_sleep","_bomb"];
+_pilot = _this select 0;
+_typeX = _this select 1;
+_countX = 4;
+_cluster = false;
 
-private _ammo = "";
-switch (_bombType) do
-{
-    case ("HE"):
-    {
+switch (_typeX) do {
+    case ("HE"): {
         _ammo = "Bo_Mk82";
     };
 	case ("CLUSTER"):
@@ -29,27 +31,17 @@ switch (_bombType) do
 	};
 };
 
-if(_ammo == "") exitWith {};
+if (typeOf (vehicle _pilot) == vehSDKPlane) then {_countX = round (_countX / 2)};
+sleep random 5;
 
-private _speedInMeters = (speed _plane) / 3.6;
-
-private _metersPerBomb = _bombRunLength / _bombCount;
-private _offset = _metersPerBomb / 2;
-
-private _timeBetweenBombs = _metersPerBomb / _speedInMeters;
-private _timeOffset = _offset / _speedInMeters;
-
-sleep _timeOffset;
-
-for "_i" from 1 to _bombCount do
-{
-	sleep _timeBetweenBombs;
-	if (alive _plane) then
+for "_i" from 1 to _countX do
 	{
-        private _bombPos = (getPos _plane) vectorAdd [0, 0, -5];
-		_bomb = _ammo createvehicle _bombPos;
+	sleep _sleep;
+	if (alive _pilot) then
+		{
+		_bomb = _ammo createvehicle ([getPos _pilot select 0,getPos _pilot select 1,(getPos _pilot select 2)- 5]);
 		waituntil {!isnull _bomb};
-		_bomb setDir (getDir _plane);
+		_bomb setDir (getDir _pilot);
 		_bomb setVelocity [0,0,-50];
 		if (_bombType == "NAPALM") then
 		{
