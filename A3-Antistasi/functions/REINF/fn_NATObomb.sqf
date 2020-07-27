@@ -71,10 +71,8 @@ _wp1 setWaypointType "MOVE";
 _wp1 setWaypointSpeed "LIMITED";
 _wp1 setWaypointBehaviour "CARELESS";
 
-if(_typeX == "NAPALM" && !napalmEnabled) then {_typeX == "HE"};
-private _bombParams = [_plane, _typeX, 4, _pos1 distance2D _pos2];
-(driver _plane) setVariable ["bombParams", _bombParams, true];
-_wp1 setWaypointStatements ["true", "(this getVariable 'bombParams') spawn A3A_fnc_airbomb"];
+if ((_typeX == "NAPALM") and (!napalmEnabled)) then {_typeX = "HE"};
+_wp1 setWaypointStatements ["true", format ["if !(local this) exitWith {}; [this, '%1'] spawn A3A_fnc_airbomb", _typeX]];
 
 _wp2 = group _plane addWaypoint [_pos2, 1];
 _wp2 setWaypointSpeed "LIMITED";
