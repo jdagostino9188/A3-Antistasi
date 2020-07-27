@@ -40,6 +40,7 @@ class A3A
 		class blackout {};
 		class buildHQ {};
         class calculateAggression {};
+        class chooseAttackType {};
 		class citiesToCivPatrol {};
 		class citySupportChange {};
 		class commsMP {};
@@ -54,6 +55,7 @@ class A3A
 		class economicsAI {};
 		class ejectPvPPlayerIfInvalidVehicle {};
 		class FIAradio {};
+        class findBaseForQRF {};
 		class findBasesForConvoy {};
 		class findNearestGoodRoad {};
 		class flagaction {};
@@ -118,8 +120,6 @@ class A3A
 		class airbomb {};
 		class airdrop {};
 		class AIreactOnKill {};
-		class airstrike {};
-		class artillery {};
 		class artySupport {};
 		class askHelp {};
 		class assaultBuilding {};
@@ -127,10 +127,13 @@ class A3A
 		class autoHealFnc {};
 		class autoLoot {};
 		class autoRearm {};
+        class callForSupport {};
 		class canConquer {};
 		class canFight {};
 		class captureX {};
 		class chargeWithSmoke {};
+        class chooseSupport {};
+        class combatLanding {};
 		class coverage {};
 		class destroyBuilding {};
 		class doFlank {};
@@ -205,12 +208,14 @@ class A3A
 		class createAIOutposts {};
 		class createAIResources {};
 		class createAISite {};
+        class createAttackVehicle {};
 		class createCIV {};
 		class createFIAOutposts2 {};
 		class createQRF {};
 		class createSDKGarrisons {};
 		class createSDKgarrisonsTemp {};
 		class createUnit {};
+        class createVehicleQRFBehaviour {};
 		class cycleSpawn {};
 		class FIAinitBases {};
 		class findSpawnPosition {};
@@ -224,13 +229,14 @@ class A3A
 		class minefieldAAF {};
 		class mortarPos {};
 		class NATOinit {};
-		class patrolCA {};
 		class patrolReinf {};
 		class reinforcementsAI {};
 		class remoteBattle {};
 		class removeVehFromPool {};
 		class safeVehicleSpawn {};
+        class singleAttack {};
 		class spawnGroup {};
+        class spawnVehicleAtMarker {};
 		class updateCAMark {};
 		class vehAvailable {};
 		class VEHdespawner {};
@@ -521,6 +527,29 @@ class A3A
 		class varNameToSaveName {};
 		class saveLoop {};
 	};
+
+    class Supports
+    {
+        class addSupportTarget {};
+        class calculateSupportCallReveal {};
+        class clearTargetArea {};
+        class createSupport {};
+        class endSupport {};
+        class initSupportCooldowns {};
+        class sendSupport {};
+        class showInterceptedSetupCall {};
+        class showInterceptedSupportCall {};
+        class SUP_airstrike {};
+        class SUP_airstrikeAvailable {};
+        class SUP_airstrikeRoutine {};
+        class SUP_mortar {};
+        class SUP_mortarAvailable {};
+        class SUP_mortarRoutine {};
+        class SUP_QRF {};
+        class SUP_QRFAvailable {};
+        class SUP_QRFRoutine {};
+        class supportAvailable {};
+    };
 
 	class Templates
 	{
