@@ -1,9 +1,6 @@
 /*
 	Updates enemy vehicle reserve pool, city support and aggro for vehicle destruction or capture
-<<<<<<< HEAD
-=======
 	Also handles the ownerSide update and enabling despawner on rebel capture
->>>>>>> Hakon/Des_heli_fix
 
 	Params:
 	1. Object: Vehicle object
@@ -15,13 +12,9 @@ private _filename = "fn_vehKilledOrCaptured";
 params ["_veh", "_sideEnemy", ["_captured", false]];
 
 private _type = typeof _veh;
-<<<<<<< HEAD
-private _side = _veh getVariable ["ownerSide", teamPlayer];
-=======
 private _side = _veh getVariable ["ownerSide", teamPlayer];			// default because Zeus
 
 if (_captured && (_side == _sideEnemy)) exitWith {};
->>>>>>> Hakon/Des_heli_fix
 
 private _act = if (_captured) then {"captured"} else {"destroyed"};
 [3, format ["%1 of %2 %3 by %4", _type, _side, _act, _sideEnemy], _filename] call A3A_fnc_log;
@@ -75,8 +68,6 @@ if (_side == civilian) then
 		} forEach allUnits;
 	} forEach crew _veh;
 };
-<<<<<<< HEAD
-=======
 
 if (_captured) then
 {
@@ -86,4 +77,3 @@ if (_captured) then
 		if !(_veh isKindOf "StaticWeapon") then { [_veh] spawn A3A_fnc_VEHdespawner };
 	};
 };
->>>>>>> Hakon/Des_heli_fix

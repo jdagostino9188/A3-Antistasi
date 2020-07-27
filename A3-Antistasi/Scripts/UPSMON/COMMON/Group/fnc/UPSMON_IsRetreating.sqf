@@ -33,8 +33,7 @@ If (_grp getvariable ["UPSMON_Grpmission",""] != "RETREAT") then
 							_grpstatus = "BLUE";
 							If (_AttackPos select 0 != 0 && _AttackPos select 1 != 0) then
 								{
-                                    //Never called, ignore it, will be replaced by VCOM anyways
-								//if (side (leader _grp) != teamPlayer) then {[[_attackPos,(side(leader _grp)),"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+								if (side (leader _grp) != teamPlayer) then {[[_attackPos,(side(leader _grp)),"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 								};//by Barbolani so AAF UPSMon garrisons call QRF
 						};
 					};
