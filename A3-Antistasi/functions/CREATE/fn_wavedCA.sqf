@@ -823,6 +823,7 @@ bigAttackInProgress = false; publicVariable "bigAttackInProgress";
 //forcedSpawn = forcedSpawn - _forced; publicVariable "forcedSpawn";
 forcedSpawn = forcedSpawn - [_mrkDestination]; publicVariable "forcedSpawn";
 
+
 // Hand remaining aggressor units to the group despawner
 {
 	// order return to base if it's an air group, city attack or if it was unsuccessful
