@@ -1,7 +1,7 @@
 /*
  * File: fn_createUnit.sqf
  * Description:
- *    To be used instead of 'createUnit' scripting command. 
+ *    To be used instead of 'createUnit' scripting command.
  *    Adds additional behaviour, including passing a loadout instead of a classname.
  * Params:
  *    _group - Group to add the AI: Group
@@ -35,5 +35,7 @@ private _unit = _group createUnit  [_type, _position, _markers, _placement, _spe
 if !(_unitLoadout isEqualTo []) then {
 	_unit setUnitLoadout _unitLoadout;
 };
+
+[_unit] call A3A_fnc_initClassActions;
 
 _unit

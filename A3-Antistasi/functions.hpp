@@ -14,6 +14,7 @@ class A3A
 		class initGarrisons {};
 		class initGetMissionPath {};
 		class initSpawnPlaces {};
+		class initHQAssets {};
 
 		class initVar {};
 		class initVarClient {};
@@ -324,6 +325,38 @@ class A3A
         class searchIntelOnLeader {};
         class selectIntel {};
         class showIntel {};
+    };
+
+    class ActionManager
+    {
+        class actionManager {};
+        class addAceAction {};
+        class addActionToClass {};
+        class addVanillaAction {};
+        class cleanActionJIP {};
+        class codeToString {};
+        class initClassActions {};
+		class initCuratorObjReg {};
+        class removeActionFromClass {};
+        class removeJIP {};
+        class removeVanillaAction {};
+    };
+
+    class Interaction
+    {
+        class addInteraction {};
+        class correctCodeFormat {};
+        class executeAction {};
+        class getAngleSpan {};
+        class getCategory {};
+        class getTypeOffset {};
+        class interactionInit {};
+        class isPosCenterScreen {};
+        class refreshKeybindHint {};
+        class removeInteraction {};
+        class renderInteractionMenu {};
+        class setActiveNode {};
+        class setInteraction {};
     };
 
 	class LTC

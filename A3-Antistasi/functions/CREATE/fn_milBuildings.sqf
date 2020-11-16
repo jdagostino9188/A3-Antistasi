@@ -37,6 +37,7 @@ private _fnc_spawnStatic = {
     if (!isNil "_dir") then { _veh setDir _dir };
     private _unit = [_groupX, _typeUnit, _positionX, [], 0, "NONE"] call A3A_fnc_createUnit;
     [_unit,_markerX] call A3A_fnc_NATOinit;
+    [_veh] call A3A_fnc_initClassActions;
     _unit moveInGunner _veh;
     _soldiers pushBack _unit;
     _vehiclesX pushBack _veh;

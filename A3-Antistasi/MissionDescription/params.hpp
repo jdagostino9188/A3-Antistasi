@@ -69,6 +69,13 @@ class Params
           texts[] = {"Yes","No"};
           default = 1;
      };
+     class InteractionEnabled
+     {
+          title = "Use Interaction Menu for actions (uses ACE Interaction Menu if loaded)";
+          values[] = {0,1};
+          texts[] = {"Vanilla Actions","Interaction Menu"};
+          default = 1;
+     };
      class AISkill
      {
           title = "Mission Difficulty";

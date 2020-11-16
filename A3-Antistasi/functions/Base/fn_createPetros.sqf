@@ -25,14 +25,18 @@ private _name = if (worldName == "Tanoa") then {"Maru"} else {"Petros"};
 [petros, "friendlyX"] remoteExec ["setIdentity", 0];
 [petros, _name] remoteExec ["setName", 0];
 
+//all petros actions
+[petros, true, 0, ["Mission Request", {CreateDialog "mission_menu";}, "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and ([_this] call A3A_fnc_isMember) and (petros == leader group petros)", 6, {nil}, 0], true] spawn A3A_fnc_actionManager;
+[petros, true, 0, ["HQ Management", A3A_fnc_dialogHQ, "(_this == theBoss) and (petros == leader group petros)", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
+[petros, true, 0, ["Move this asset", {_this spawn A3A_fnc_moveHQObject}, "(isNull attachedTo _target) and (_this == theBoss) and (petros == leader group petros)", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
+[petros, true, 0, ["Build HQ here", {[] spawn A3A_fnc_BuildHQ}, "(_this == _this getVariable ['owner',objNull]) and (_this == theBoss) and (petros != leader group petros)", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
+
+
 if (petros == leader _groupPetros) then {
 	_groupPetros setGroupIdGlobal ["Petros","GroupColor4"];
 	petros disableAI "MOVE";
 	petros disableAI "AUTOTARGET";
 	petros setBehaviour "SAFE";
-	[Petros,"mission"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian]]
-} else {
-	[Petros,"buildHQ"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian]]
 };
 
 call A3A_fnc_initPetros;

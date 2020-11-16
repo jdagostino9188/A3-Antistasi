@@ -315,6 +315,7 @@ if (!_busy) then
 _typeVehX = if (_sideX == Occupants) then {NATOFlag} else {CSATFlag};
 _flagX = createVehicle [_typeVehX, _positionX, [],0, "NONE"];
 _flagX allowDamage false;
+[_flagX] call A3A_fnc_initClassActions;
 [_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
 _vehiclesX pushBack _flagX;
 
@@ -326,6 +327,7 @@ private _ammoBox = if (garrison getVariable [_markerX + "_lootCD", 0] == 0) then
 	// Otherwise when destroyed, ammoboxes sink 100m underground and are never cleared up
 	_ammoBox addEventHandler ["Killed", { [_this#0] spawn { sleep 10; deleteVehicle (_this#0) } }];
 	[_ammoBox] spawn A3A_fnc_fillLootCrate;
+	[_ammoBox] call A3A_fnc_initClassActions;
 	_ammoBox call jn_fnc_logistics_addAction;
 
 	[_ammoBox] spawn {

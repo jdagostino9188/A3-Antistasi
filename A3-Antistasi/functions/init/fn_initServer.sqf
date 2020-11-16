@@ -47,6 +47,7 @@ if (isMultiplayer) then {
 	helmetLossChance = "helmetLossChance" call BIS_fnc_getParamValue; publicVariable "helmetLossChance";
 	LootToCrateEnabled = if ("EnableLootToCrate" call BIS_fnc_getParamValue == 1) then {true} else {false}; publicVariable "LootToCrateEnabled";
 	LTCLootUnlocked = if ("LTCLootUnlocked" call BIS_fnc_getParamValue == 1) then {true} else {false}; publicVariable "LTCLootUnlocked";
+	InteractionEnabled = "InteractionEnabled" call BIS_fnc_getParamValue; publicVariable "InteractionEnabled";
 } else {
 	[2, "Setting Singleplayer Params", _fileName] call A3A_fnc_log;
 	//These should be set in the set parameters dialog.
@@ -78,10 +79,10 @@ if (isMultiplayer) then {
 	LootToCrateEnabled = true;
 	LTCLootUnlocked = false;
     startWithLongRangeRadio = true;
+	startWithLongRangeRadio = false;
+	InteractionEnabled = "InteractionEnabled" call BIS_fnc_getParamValue;
 };
-
 [] call A3A_fnc_crateLootParams;
-
 
 // Maintain a profilenamespace array called antistasiSavedGames
 // Each entry is an array: [campaignID, mapname, "Blufor"|"Greenfor"]
@@ -126,6 +127,10 @@ publicVariable "campaignID";
 
 //Initialise variables needed by the mission.
 _nul = call A3A_fnc_initVar;
+call A3A_fnc_initHQAssets; //add actions to the hq assets (rely on a param)
+if (LootToCrateEnabled) then {
+	call A3A_fnc_initLootToCrate;
+};
 
 savingServer = true;
 [2,format ["%1 server version: %2", ["SP","MP"] select isMultiplayer, localize "STR_antistasi_credits_generic_version_text"],_fileName] call A3A_fnc_log;
@@ -271,5 +276,9 @@ savingServer = false;
 		sleep _logPeriod;
 	};
 };
+
+//curator placed object initClassActions
+{ [_x] call A3A_fnc_initCuratorObjReg; } forEach (entities "ModuleCurator_F");
+
 execvm "functions\init\fn_initSnowFall.sqf";
 [2,"initServer completed",_fileName] call A3A_fnc_log;

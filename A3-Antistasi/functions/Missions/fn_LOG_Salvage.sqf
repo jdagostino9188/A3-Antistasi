@@ -67,11 +67,12 @@ private _box = _boxType createVehicle _boxPos;
 //Used in salvage rope
 _box setVariable ["SalvageCrate", true, true];
 private _crateContents = selectRandom [
-	[_box, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 5, 10, 0, 0], 
-	[_box, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0], 
+	[_box, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 5, 10, 0, 0],
+	[_box, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0],
 	[_box, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 _crateContents call A3A_fnc_fillLootCrate;
+[_box] call A3A_fnc_initClassActions;
 [3, format ["Box spawned"], _filename] call A3A_fnc_log;
 
 //Create boat and initialise crew members
@@ -141,4 +142,3 @@ deleteVehicle _ship;
 
 [_vehCrewGroup] spawn A3A_fnc_groupDespawner;
 [_veh] spawn A3A_fnc_vehDespawner;
-

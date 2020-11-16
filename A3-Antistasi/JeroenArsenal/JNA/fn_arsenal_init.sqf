@@ -63,6 +63,7 @@ if(isServer)then{
 if(hasInterface)then{
     [2,"JNA loading player data",_fileName] call A3A_fnc_log;
 
+/*                          Replaced with InteractionMenu quickInteraction in initHQAssets
     //add arsenal button
     _object addaction [
         localize "STR_A3_Arsenal",
@@ -73,10 +74,7 @@ if(hasInterface)then{
         false,
         "",
         "alive _target && {_target distance _this < 5}"
-    ];
-
-
-
+    ];*/
 
     //add open event
     [missionNamespace, "arsenalOpened", {

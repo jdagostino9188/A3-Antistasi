@@ -1,74 +1,39 @@
-//check if action already on player
-if ((actionIDs Player) findIf {
-	_params = player actionParams _x;
-	(_params#0) isEqualTo "Load loot to crate"
-} != -1) exitWith {};
+//server exec single time, adds LTC actions as class actions to all LTC boxes
+if (!isServer) exitWith {};
+if (!isNil "A3A_LTCInit") exitWith {};
 
-//add load actions
-player addAction [
+["Box_IND_Wps_F", true, 0, [
 	"Load loot to crate",
-	{
-		[cursorObject, clientOwner] remoteExecCall ["A3A_fnc_canLoot", 2];
-	},
-	nil,
-	1.5,
-	true,
-	true,
-	"",
-	"(
-		((typeof cursorObject) isEqualTo 'Box_IND_Wps_F')
-		and (cursorObject distance _this < 3)
-		and (attachedTo cursorObject isEqualTo objNull)
-	)"
-];
+	{[_this#0, clientOwner] remoteExecCall ["A3A_fnc_canLoot", 2]}
+	, {attachedTo _target isEqualTo objNull}
+	, 3
+], true] spawn A3A_fnc_actionManager;
 
-player addAction [
+["Box_IND_Wps_F", true, 0, [
 	"Load loot from crate to vehicle",
-	{
-		[cursorObject, clientOwner] remoteExecCall ["A3A_fnc_canTransfer", 2];
-	},
-	nil,
-	1.5,
-	true,
-	true,
-	"",
-	"(
-		((typeof cursorObject) isEqualTo 'Box_IND_Wps_F')
-		and (cursorObject distance _this < 3)
-		and (attachedTo cursorObject isEqualTo objNull)
-	)"
-];
+	{[_this#0, clientOwner] remoteExecCall ["A3A_fnc_canTransfer", 2]}
+	, {attachedTo _target isEqualTo objNull}
+	, 3
+	, {nil}
+	, 1.5
+]] spawn A3A_fnc_actionManager;
 
-//add carry actions
-player addAction [
+["Box_IND_Wps_F", true, 0, [
 	"Carry Crate",
-	{
-		[cursorObject, true] call A3A_fnc_carryCrate;
-	},
-	nil,
-	1.5,
-	true,
-	true,
-	"",
-	"(
-		((typeof cursorObject) isEqualTo 'Box_IND_Wps_F')
-		and (cursorObject distance _this < 3)
-		and ({!(_x isEqualTo objNull)} count attachedObjects _this isEqualTo 0)
-		and (attachedTo cursorObject isEqualTo objNull)
-	)"
-];
+	{[_this#0, true] call A3A_fnc_carryCrate;}
+	, {(attachedTo _target isEqualTo objNull) && ({!(_x isEqualTo objNull)} count attachedObjects _this isEqualTo 0)}
+	, 3
+	, {nil}
+	, 1
+]] spawn A3A_fnc_actionManager;
 
-player addAction [
+["Box_IND_Wps_F", true, 0, [
 	"Drop Crate",
-	{
-		[nil, false] call A3A_fnc_carryCrate;
-	},
-	nil,
-	1.5,
-	true,
-	true,
-	"",
-	"(
-		(_this getVariable ['carryingCrate', false])
-	)"
-];
+	{[nil, false] call A3A_fnc_carryCrate;}
+	, {_this getVariable ['carryingCrate', false]}
+	, 3
+	, {nil}
+	, 1
+]] spawn A3A_fnc_actionManager;
+
+A3A_LTCInit = true;
