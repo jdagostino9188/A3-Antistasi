@@ -36,7 +36,7 @@ private _setChildModelPosData = {
 };
 
 //model relative position data
-private _currentNodeData = IMTarget getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
+private _currentNodeData = IMTarget getVariable ["A3A_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
 private _parentModelPos = [0,0,0];
 
 //set path model relative position data

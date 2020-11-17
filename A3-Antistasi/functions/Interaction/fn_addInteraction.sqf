@@ -76,7 +76,7 @@ _repeatable = [
 _actionParams = [_name, _code, _condition, _distance, _arguments, _priority, _repeatable, _icon, _childMenu, _path];
 
 //get the copy of the data for easy setting and a reference to the copy of data down the data stucture
-private _interactionMenu = _object getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
+private _interactionMenu = _object getVariable ["A3A_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
 private _parent = [_interactionMenu, _path] call A3A_fnc_getCategory;
 private _children = (_parent#8);
 
@@ -97,6 +97,6 @@ if (_index isEqualTo -1) then { //Create new action
 };
 _parent set [8, [_children, [], {_x#5}, "DESCEND"] call BIS_fnc_sortBy];
 
-_object setVariable ["RB_InteractionMenu", _interactionMenu];
+_object setVariable ["A3A_InteractionMenu", _interactionMenu];
 
 [_path, _name]

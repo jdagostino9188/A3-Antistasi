@@ -48,13 +48,13 @@ _repeatable = [
 ];
 
 //set action data
-private _interactionMenu = _obj getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true}, {false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
+private _interactionMenu = _obj getVariable ["A3A_InteractionMenu", ["",{},{false},50,{nil},3,[{true}, {false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
 _interactionMenu set [0, _text];
 _interactionMenu set [1, _code];
 _interactionMenu set [2, _condition];
 _interactionMenu set [3, _distance];
 _interactionMenu set [4, _arguments];
 _interactionMenu set [6, _repeatable];
-_obj setVariable ["RB_InteractionMenu", _interactionMenu, call (_repeatable#1)];
+_obj setVariable ["A3A_InteractionMenu", _interactionMenu, call (_repeatable#1)];
 
 true;

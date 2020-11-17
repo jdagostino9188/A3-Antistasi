@@ -142,10 +142,10 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
 
         if (isNull IMTarget) then { //work-around for attached objects not registering as cursorTarget when looking at them
             private _objects = attachedObjects player;
-            private _index = _objects findIf {!isNil {_x getVariable "RB_InteractionMenu"}};
+            private _index = _objects findIf {!isNil {_x getVariable "A3A_InteractionMenu"}};
             if !(_index isEqualTo -1) then {IMTarget = _objects#_index};
         };
-        if ( isNil {IMTarget getVariable "RB_InteractionMenu"} ) then { IMTarget = objNull };//dont hold target with no interaction
+        if ( isNil {IMTarget getVariable "A3A_InteractionMenu"} ) then { IMTarget = objNull };//dont hold target with no interaction
         if (isNull IMTarget) exitWith {};
         IMTypeOffset = [IMTarget] call A3A_fnc_getTypeOffset;
     };
@@ -158,7 +158,7 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         private _originalTarget = cursorTarget;
         private _target = vehicle _originalTarget;
 
-        private _interactionMenu = _target getVariable "RB_InteractionMenu";
+        private _interactionMenu = _target getVariable "A3A_InteractionMenu";
         if (isNil "_interactionMenu") exitWith {};
         _interactionMenu params ["_text", "_action", "_condition", "_distance", "", "", "", "_icon", "_children"];
 
@@ -207,7 +207,7 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         private _target = vehicle _originalTarget;
 
         //get target interaction data
-        private _interactionMenu = IMTarget getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
+        private _interactionMenu = IMTarget getVariable ["A3A_InteractionMenu", ["",{},{false},50,{nil},3,[{true},{false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
         _interactionMenu params ["_text", "_action", "_condition", "_distance", "_arguments", "_priority", "_repeatable", "_icon", "_children", "_path"];
 
         //condition or valid children to render

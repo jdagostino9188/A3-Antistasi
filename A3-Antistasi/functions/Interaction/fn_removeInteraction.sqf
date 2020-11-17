@@ -32,12 +32,12 @@ _action params [
     , ["_actionName", ""]
 ];
 
-private _interactionMenu = _object getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true}, {false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
+private _interactionMenu = _object getVariable ["A3A_InteractionMenu", ["",{},{false},50,{nil},3,[{true}, {false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];
 private _parent = [_interactionMenu, _path, true] call A3A_fnc_getCategory;
 
 if (_parent isEqualTo -1) exitWith {false};
 _actionID = (_parent#8) findIf {(_x#0) isEqualTo _actionName};
 (_parent#8) deleteAt _actionID;
-_object setVariable ["RB_InteractionMenu", _interactionMenu];
+_object setVariable ["A3A_InteractionMenu", _interactionMenu];
 
 true
