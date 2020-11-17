@@ -2,12 +2,12 @@
     Author: Håkon
     Last Edited: Håkon - 2020-10-23
     Function:
-		Sets the model relative position data and interaction data, for rendering and execution
+        Sets the model relative position data and interaction data, for rendering and execution
 
     Arguments:
 
     Return:
-		<Nil>
+        <Nil>
 
     Example:
 
@@ -15,7 +15,7 @@
 
     Effect: Local
 
-	Public: true
+    Public: true
 */
 params ["_parentPos", "_parentEntryAngle", "_nodeActionData"];
 _nodeActionData params ["_text", "_action", "_condition", "_distance", "_arguments", "_priority", "_repeatable", "_icon", "_childMenu", "_inheritance"];

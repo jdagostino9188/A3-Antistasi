@@ -2,17 +2,17 @@
     Author: Håkon
     Last Edited: Håkon - 2020-10-23
     Function:
-		find if the position is in the center of the screen, rotatet based on the IMTarget and the player
+        find if the position is in the center of the screen, rotatet based on the IMTarget and the player
 
     Arguments:
-		0. <object>
-		1. <Array> actionID
-			<Array> Path
-				<String> names of Action/category to the action you want to remove
-			<String> Action name
+        0. <object>
+        1. <Array> actionID
+            <Array> Path
+                <String> names of Action/category to the action you want to remove
+            <String> Action name
 
     Return:
-		<Bool> if the action was removed
+        <Bool> if the action was removed
 
     Example:
 
@@ -20,16 +20,16 @@
 
     Effect: Local
 
-	Public: true
+    Public: true
 */
 params [
-	["_object", objNull]
-	, ["_action", [[], ""]]
+    ["_object", objNull]
+    , ["_action", [[], ""]]
 ];
 if (isNull _object) exitWith {};
 _action params [
-	["_path", []]
-	, ["_actionName", ""]
+    ["_path", []]
+    , ["_actionName", ""]
 ];
 
 private _interactionMenu = _object getVariable ["RB_InteractionMenu", ["",{},{false},50,{nil},3,[{true}, {false}],"\a3\ui_f\data\map\markers\military\dot_ca.paa",[],[]]];

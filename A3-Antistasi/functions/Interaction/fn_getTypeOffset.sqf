@@ -22,7 +22,7 @@ if (isNull _object) exitWith {[0,0,0]};
 if (_object isKindOf "CAManBase") exitWith {[0,0,1.3]};
 
 switch (typeOf _object) do {
-	case ("Flag_FIA_F"): { [-0.12,-0.38,-2.5] }; //Flag
-	case ("MapBoard_seismic_F"): { [0,-0.2,0.5] };
-	default { [0,0,0] };
+    case ("Flag_FIA_F"): { [-0.12,-0.38,-2.5] }; //Flag
+    case ("MapBoard_seismic_F"): { [0,-0.2,0.5] };
+    default { [0,0,0] };
 };

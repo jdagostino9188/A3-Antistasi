@@ -18,7 +18,7 @@
 */
 params ["_curator"];
 _curator addEventHandler ["CuratorObjectPlaced", {
-	params ["_curator", "_entity"];
-	if (typeOf _entity isEqualTo "zen_modules_moduleAssignZeus") then { [_curator] call A3A_fnc_initCuratorObjReg }; //promote to zues module
-	[_entity] call A3A_fnc_initClassActions;
+    params ["_curator", "_entity"];
+    if (typeOf _entity isEqualTo "zen_modules_moduleAssignZeus") then { [_curator] call A3A_fnc_initCuratorObjReg }; //promote to zues module
+    [_entity] call A3A_fnc_initClassActions;
 }];

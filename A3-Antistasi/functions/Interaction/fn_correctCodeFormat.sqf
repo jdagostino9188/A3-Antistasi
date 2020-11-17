@@ -3,13 +3,13 @@ private _filename = "A3A_fnc_correctCodeFormat";
     Author: Håkon
     Last Edited: Håkon - 2020-10-23
     Function:
-		correct format of input to be executable code
+        correct format of input to be executable code
 
     Arguments:
-		0. <Bool/String/Code> To correct format
+        0. <Bool/String/Code> To correct format
 
     Return:
-		<Code> compiled code ready for execution
+        <Code> compiled code ready for execution
 
     Example:
 
@@ -17,7 +17,7 @@ private _filename = "A3A_fnc_correctCodeFormat";
 
     Effect: Local
 
-	Public: false
+    Public: false
 */
 params ["_code"];
 if !(_code isEqualTypeAny [true, "", {}]) exitWith { [1, format ["Invalid input type: %1 | Ecspected: Bool/String/Code", _code], _filename] call A3A_fnc_log; {false} };

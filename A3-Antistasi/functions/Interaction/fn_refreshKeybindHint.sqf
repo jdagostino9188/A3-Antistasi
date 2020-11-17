@@ -17,19 +17,19 @@
 */
 IMKeyName = actionKeysNames ["User13",1];
 if (IMKeyName isEqualTo "") then {
-	IMKeyName = "Open Menu: [ Left Windows ] (Hold)";
-	IMKeyBound = false;
+    IMKeyName = "Open Menu: [ Left Windows ] (Hold)";
+    IMKeyBound = false;
 } else {
-	IMKeyName = format ["Open Menu: [ %1 ] (Hold)", call compile IMKeyName];
-	IMKeyBound = true;
+    IMKeyName = format ["Open Menu: [ %1 ] (Hold)", call compile IMKeyName];
+    IMKeyBound = true;
 };
 
 //quick interaction key
 QIKeyName = actionKeysNames ["User14",1];
 if (QIKeyName isEqualTo "") then {
-	QIKeyName = "[ F ]";
-	QIKeyBound = false;
+    QIKeyName = "[ F ]";
+    QIKeyBound = false;
 } else {
-	QIKeyName = format ["[ %1 ]", call compile QIKeyName];
-	QIKeyBound = true;
+    QIKeyName = format ["[ %1 ]", call compile QIKeyName];
+    QIKeyBound = true;
 };

@@ -33,11 +33,11 @@ private _classActionArray = if (_useInheritance) then {A3A_AM_inheritedClassActi
 //add action to the right array
 private _index = _classActionArray findIf { (_x#0) isEqualTo _class };
 if (_index isEqualTo -1) then {
-	_classActionArray pushBack [ _class, [[_action, _optionalArgument]] ];
+    _classActionArray pushBack [ _class, [[_action, _optionalArgument]] ];
 } else {
-	private _actionArray = (_classActionArray#_index#1);
-	if ([_action, _optionalArgument] in _actionArray) exitWith {};
-	_actionArray pushBack [_action, _optionalArgument];
+    private _actionArray = (_classActionArray#_index#1);
+    if ([_action, _optionalArgument] in _actionArray) exitWith {};
+    _actionArray pushBack [_action, _optionalArgument];
 };
 
 //get valid objects
@@ -45,5 +45,5 @@ _activeObjects = entities [[_class], [], true];
 
 //add action to already active objects
 {
-	[_x, true, 0, _action, _optionalArgument] spawn A3A_fnc_actionManager;
+    [_x, true, 0, _action, _optionalArgument] spawn A3A_fnc_actionManager;
 } forEach _activeObjects;

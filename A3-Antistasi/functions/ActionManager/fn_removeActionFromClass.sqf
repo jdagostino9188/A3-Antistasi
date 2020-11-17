@@ -39,5 +39,5 @@ _activeObjects = entities [[_class], [], true];
 
 //remove action from already active objects
 {
-	[_x, false, 0, _action, _optionalArgument] spawn A3A_fnc_actionManager;
+    [_x, false, 0, _action, _optionalArgument] spawn A3A_fnc_actionManager;
 } forEach _activeObjects;
