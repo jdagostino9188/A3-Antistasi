@@ -171,7 +171,7 @@ private _aceInteraction = {
 
     //fix for bad node root offset
     _offset = [_object] call A3A_fnc_getTypeOffset;
-    if ((_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is prefrerable
+    if (!(_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is prefrerable
         if ((_path#0) isEqualTo "ACE_MainActions") then {_path set [0,"Interactions"]};
         if (isNil "ACE_Interaction_Menu_BadClassOffset") then {ACE_Interaction_Menu_BadClassOffset = []};
         if !(_object in ACE_Interaction_Menu_BadClassOffset) then {
