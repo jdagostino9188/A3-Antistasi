@@ -4,9 +4,6 @@ if ((count weaponCargo boxX >0) or (count magazineCargo boxX >0) or (count itemC
 
 if !(isNull attachedTo petros) exitWith {["Move HQ", "Put Petros down before you move the HQ!"] call A3A_fnc_customHint;};
 
-
-[petros,"remove"] remoteExec ["A3A_fnc_flagaction",0];
-//removeAllActions petros;
 private _groupPetros = group petros;
 [petros] join theBoss;
 deleteGroup _groupPetros;
@@ -14,26 +11,6 @@ deleteGroup _groupPetros;
 petros setBehaviour "AWARE";
 petros enableAI "MOVE";
 petros enableAI "AUTOTARGET";
-
-/*
-if (isMultiplayer) then
-	{
-	// these would need to be remoteExec'd on the server
-	boxX hideObjectGlobal true;
-	vehicleBox hideObjectGlobal true;
-	mapX hideObjectGlobal true;
-	fireX hideObjectGlobal true;
-	flagX hideObjectGlobal true;
-	}
-else
-	{
-	boxX hideObject true;
-	vehicleBox hideObject true;
-	mapX hideObject true;
-	fireX hideObject true;
-	flagX hideObject true;
-	};
-*/
 
 fireX inflame false;
 

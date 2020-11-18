@@ -77,7 +77,7 @@ for "_i" from 0 to _countX do
 	sleep 1;
 	//if (alive _unit) then {_unit playMove "UnaErcPoslechVelitele1";};
 	_POWS pushBack _unit;
-	[_unit,"prisonerX"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_unit];
+	[_unit,"prisonerX"] remoteExec ["A3A_fnc_commonActions", 2];
 	[_unit] call A3A_fnc_reDress;
 	};
 

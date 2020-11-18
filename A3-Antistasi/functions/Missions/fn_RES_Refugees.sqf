@@ -54,7 +54,7 @@ for "_i" from 1 to (((count _posHouse) - 1) min 15) do
 	_unit allowFleeing 0;
 	_unit setSkill 0;
 	_POWs pushBack _unit;
-	[_unit,"refugee"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_unit];
+	[_unit,"refugee"] remoteExec ["A3A_fnc_commonActions", 2];
 	if (_sideX == Occupants) then {[_unit,true] remoteExec ["setCaptive",0,_unit]; _unit setCaptive true};
 	[_unit] call A3A_fnc_reDress;
 	sleep 0.5;
@@ -215,7 +215,7 @@ if (_sideX == Occupants) then
 	deleteMarkerLocal _mrk;
 	if (!isNull _veh) then { [_veh] spawn A3A_fnc_vehDespawner };
 	if (!isNull _groupX1) then { [_groupX1] spawn A3A_fnc_groupDespawner };
-	[_groupX] spawn A3A_fnc_groupDespawner; 
+	[_groupX] spawn A3A_fnc_groupDespawner;
 };
 
 //sleep (540 + random 1200);

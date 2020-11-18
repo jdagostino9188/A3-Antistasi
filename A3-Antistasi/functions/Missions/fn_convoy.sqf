@@ -240,7 +240,7 @@ if (_convoyType == "Prisoners") then
 		_unit moveInCargo [_vehObj, _i + 3];
 		removeAllWeapons _unit;
 		removeAllAssignedItems _unit;
-		[_unit,"refugee"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_unit];
+		[_unit,"refugee"] remoteExec ["A3A_fnc_commonActions", 2];
 		_POWS pushBack _unit;
 		[_unit] call A3A_fnc_reDress;
 	};
@@ -284,16 +284,16 @@ _route deleteAt 0;
 private _bonus = if (_difficult) then {2} else {1};
 private _distanceFromTargetForArrival = 200;
 
-private _fnc_applyResults = 
+private _fnc_applyResults =
 {
 	params ["_success", "_success1", "_adjustCA", "_adjustBoss", "_aggroMod", "_aggroTime", "_type"];
-	
+
 	_taskState = if (_success) then { "SUCCEEDED" } else { "FAILED" };
 	_taskState1 = if (_success1) then { "SUCCEEDED" } else { "FAILED" };
 
 	[_adjustCA, _sideX] remoteExec ["A3A_fnc_timingCA", 2];
 	[_adjustBoss, theBoss] call A3A_fnc_playerScoreAdd;
-	
+
 	if (_sideX == Occupants) then {
 		[[_aggroMod, _aggroTime], [0, 0]] remoteExec ["A3A_fnc_prestige", 2]
 	} else {

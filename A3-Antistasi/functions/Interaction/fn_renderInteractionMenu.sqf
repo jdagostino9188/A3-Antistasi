@@ -31,11 +31,12 @@ private _rotateOffset = if (IMTarget isEqualTo attachedTo player) then {_dir} el
 //draw selector
 if (!isNil "ActiveNodeData" && IMNodeSelected) then {
     ActiveNodeData params ["_pos", "_entryAngle", "_actionData"];
-    _actionData params ["", "_action", "_condition", "_distance", "", "", "", ""];
+    _actionData params ["", "_action", "_condition", "_distance", "", "", "", "_icon"];
 
     //display formating
     private _category = _action isEqualTo {} || !(call _condition && _target distance _this < _distance);
     private _iconSize = if (_category) then {0.8} else {0.6};
+    if !(_icon isEqualTo "\a3\ui_f\data\map\markers\military\dot_ca.paa") then {_iconSize = 1}; //overwrite for custom icons, they are usually bigger
 
     //rendering
     drawIcon3D ["\a3\ui_f\data\igui\cfg\holdactions\idle\idle_1_ca.paa", [1,1,1,0.5], _pos, _iconSize, _iconSize, IMSelectedRotation, "", true, 0.03, "TahomaB", "left"];

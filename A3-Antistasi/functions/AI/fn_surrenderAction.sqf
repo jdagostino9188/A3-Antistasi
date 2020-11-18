@@ -95,11 +95,11 @@ _unit addEventHandler ["HandleDamage", {
 	// If unit gets injured after the delay, run away
 	params ["_unit","_part","_damage"];
 	if (_damage < 0.2) exitWith {};
-	[_unit, "remove"] remoteExec ["A3A_fnc_flagaction", [teamPlayer, civilian], _unit];
+	[_unit,"captureX", false] remoteExec ["A3A_fnc_commonActions", 2];
 	[_unit, side group _unit] spawn A3A_fnc_fleeToSide;
 	_unit removeEventHandler ["HandleDamage", _thisEventHandler];
 	nil;
 }];
 
 // Add release/recruit/interrogate options
-[_unit,"captureX"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_unit];
+[_unit,"captureX"] remoteExec ["A3A_fnc_commonActions", 2];

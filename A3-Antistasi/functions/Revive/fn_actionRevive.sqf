@@ -6,6 +6,7 @@ _actionX = 0;
 _healed = false;
 _player = isPlayer _medicX;
 _inPlayerGroup = if !(_player) then {if ({isPlayer _x} count (units group _medicX) > 0) then {true} else {false}} else {false};
+private _removeReviveAction = { [_cured,"heal1", false] remoteExec ["A3A_fnc_commonActions", 2]; };
 if (captive _medicX) then
     {
     [_medicX,false] remoteExec ["setCaptive",0,_medicX];
@@ -15,6 +16,7 @@ if !(alive _cured) exitWith
     {
     if (_player) then {["Revive", format ["%1 is already dead",name _cured]] call A3A_fnc_customHint;};
     if (_inPlayerGroup) then {_medicX groupChat format ["%1 is already dead",name _cured]};
+    call _removeReviveAction;
     _healed
     };
 if !([_medicX] call A3A_fnc_canFight) exitWith {if (_player) then {["Revive", "You are not able to revive anyone"] call A3A_fnc_customHint;};_healed};
@@ -50,6 +52,7 @@ if !(_cured getVariable ["incapacitated",false]) exitWith
     {
     if (_player) then {["Revive", format ["%1 no longer needs your help",name _cured]] call A3A_fnc_customHint;};
     if (_inPlayerGroup) then {_medicX groupChat format ["%1 no longer needs my help",name _cured]};
+    call _removeReviveAction;
     _healed
     };
 if (_player) then
@@ -135,7 +138,7 @@ if (!_player) then
     }
 else
     {
-    _medicX removeAction _actionX;
+    _medicX removeAction _actionX; //cansel action (self contained)
     _cured setVariable ["helped",objNull,true];
     _medicX setVariable ["helping",false];
     };
@@ -152,6 +155,7 @@ if !(alive _cured) exitWith
     {
     if (_player) then {["Revive", format ["We lost %1",name _cured]] call A3A_fnc_customHint;};
     if (_inPlayerGroup) then {_medicX groupChat format ["We lost %1",name _cured]};
+    call _removeReviveAction;
     _healed
     };
 if (!([_medicX] call A3A_fnc_canFight) or (_medicX != vehicle _medicX) or (_medicX distance _cured > 3)) exitWith {if (_player) then {["Revive", "Revive cancelled"] call A3A_fnc_customHint;};_healed};
@@ -172,5 +176,5 @@ else
     if (_player) then {["Revive", "Revive unsuccesful"] call A3A_fnc_customHint;};
     if (_inPlayerGroup) then {_medicX groupChat "Revive failed"};
     };
-
+call _removeReviveAction;
 _healed

@@ -27,14 +27,14 @@ if (_type == "Fin_random_F") exitWith {};
 _unit addEventHandler ["HandleDamage", A3A_fnc_handleDamageAAF];
 _unit addEventHandler ["killed", A3A_fnc_occupantInvaderUnitKilledEH];
 
-if !(isNil "_isSpawner") then 
+if !(isNil "_isSpawner") then
 {
-    if (_isSpawner) then { _unit setVariable ["spawner",true,true] };	
+    if (_isSpawner) then { _unit setVariable ["spawner",true,true] };
 }
 else
 {
     private _veh = objectParent _unit;
-    if (_marker != "") exitWith 
+    if (_marker != "") exitWith
     {
         // Persistent garrison units are never spawners.
 	    _unit setVariable ["markerX",_marker,true];
@@ -108,7 +108,7 @@ if (_type in squadLeaders) then
     private _hasIntel = ((random 100) < 40);
     _unit setVariable ["hasIntel", _hasIntel, true];
     _unit setVariable ["side", _side, true];
-    [_unit, "Intel_Small"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian], _unit];
+    [_unit, "Intel_Small"] remoteExec ["A3A_fnc_commonActions",2];
 };
 
 //Sets NVGs, lights, lasers, radios and spotting skills for the night

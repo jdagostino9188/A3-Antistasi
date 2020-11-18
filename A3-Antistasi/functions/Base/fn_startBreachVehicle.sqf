@@ -12,7 +12,8 @@ if(!_isEngineer) exitWith
 if(!alive _vehicle) exitWith
 {
     ["Breach Vehicle", "Why would you want to breach a destroyed vehicle?"] call A3A_fnc_customHint;
-    _vehicle removeAction _actionID;
+    [_vehicle, "breach", false] remoteExec ["A3A_fnc_commonActions", 2];
+    [_vehicle, "breach", false] remoteExec ["A3A_fnc_commonActions", 2];
 };
 
 private _vehCrew = crew _vehicle;
@@ -21,13 +22,13 @@ if(count _aliveCrew == 0) exitWith
 {
     ["Breach Vehicle", "There is no living crew left, no need for breaching!"] call A3A_fnc_customHint;
     _vehicle lock false;
-    _vehicle removeAction _actionID;
+    [_vehicle, "breach", false] remoteExec ["A3A_fnc_commonActions", 2];
 };
 
 if(side (_aliveCrew select 0) == teamPlayer) exitWith
 {
     ["Breach Vehicle", "You cannot breach a vehicle which is controlled by the rebels!"] call A3A_fnc_customHint;
-    _vehicle removeAction _actionID;
+    [_vehicle, "breach", false] remoteExec ["A3A_fnc_commonActions", 2];
 };
 
 private _isTank = (typeOf _vehicle) in vehTanks;
@@ -114,7 +115,7 @@ _caller setVariable ["animsDone",false];
 _caller setVariable ["cancelBreach",false];
 
 private _action = _caller addAction ["Cancel Breaching", {(_this select 1) setVariable ["cancelBreach",true]},nil,6,true,true,"","(isPlayer _this) && (_this == vehicle _this)"];
-_vehicle removeAction _actionID;
+[_vehicle, "breach", false] remoteExec ["A3A_fnc_commonActions", 2];
 
 _caller addEventHandler ["AnimDone",
 {

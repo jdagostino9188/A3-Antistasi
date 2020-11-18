@@ -67,6 +67,7 @@ if (isNil "InteractionKeyEH") then {//percistant trough respawn
     //position data
     PlayerPos = getPosASLVisual player;
     IMTargetPos = getPosASLVisual IMTarget;
+    IMTargetStance = stance objNull;
 
     //IM data
     IMSelectedRotation = 0;
@@ -138,13 +139,13 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
     if ( inputAction "User13" isEqualTo 1 || (!IMKeyBound && IMDefaultKey) ) then {
         if ((InteractionEnabled isEqualTo 1 && hasAce) || InteractionEnabled isEqualTo 0) exitWith {};
         if !(isNull IMTarget) exitWith {};
-        IMTarget = cursorTarget;
-
-        if (isNull IMTarget) then { //work-around for attached objects not registering as cursorTarget when looking at them
+        IMTarget = getCursorObjectParams#0;
+/*** DISABLED TO SEE IF getCursorObjectParams DOSNT HAVE THIS ISSUE ***/
+/*        if (isNull IMTarget) then { //work-around for attached objects not registering as cursorTarget when looking at them
             private _objects = attachedObjects player;
             private _index = _objects findIf {!isNil {_x getVariable "A3A_InteractionMenu"}};
             if !(_index isEqualTo -1) then {IMTarget = _objects#_index};
-        };
+        };*/
         if ( isNil {IMTarget getVariable "A3A_InteractionMenu"} ) then { IMTarget = objNull };//dont hold target with no interaction
         if (isNull IMTarget) exitWith {};
         IMTypeOffset = [IMTarget] call A3A_fnc_getTypeOffset;
@@ -155,7 +156,7 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         //      quick interaction render        //
         //////////////////////////////////////////
 
-        private _originalTarget = cursorTarget;
+        private _originalTarget = getCursorObjectParams#0;
         private _target = vehicle _originalTarget;
 
         private _interactionMenu = _target getVariable "A3A_InteractionMenu";
@@ -169,23 +170,31 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         private ["_iconToDraw", "_color", "_displayText", "_keyBindName"];
         if (call _condition && _target distance _this < _distance) then {
             _keyBindName = QIKeyName;
-            _iconToDraw = "";
+            _iconToDraw = _icon;
             _color = [1,1,1,1];
             _displayText = _text;
         } else {
             _keyBindName = "";
             _iconToDraw = "\a3\ui_f\data\map\markers\military\dot_ca.paa";
-            _color = [0.7,0.7,0.7,1];
+            _color = [0.9,0.3,0.3,1];
             _displayText = "";
         };
 
+        //set node offset
+        if (!(_target isEqualTo QITarget) || !(PlayerPos isEqualTo getPosASLVisual player) || !(IMTargetPos isEqualTo getPosASLVisual QITarget) || !(IMTargetStance isEqualTo stance QITarget)) then {
+            QITarget = _target;
+            PlayerPos = getPosASLVisual player;
+            IMTargetPos = getPosASLVisual QITarget;
+            IMTargetStance = stance QITarget;
+            IMTypeOffset = [_target] call A3A_fnc_getTypeOffset;
+        };
+
         //render node
-        if !(_target isEqualTo QITarget) then {IMTypeOffset = [_target] call A3A_fnc_getTypeOffset; QITarget = _target};
         drawIcon3D [_iconToDraw, _color, _target modelToWorldVisual IMTypeOffset, 0.6, 0.6, 0, _displayText, true, 0.03, "TahomaB", "center"];
 
         //render keybind hints
         private _distToObj = _target distance _this;
-        drawIcon3D ["", [1,1,1,1], _target modelToWorldVisual (IMTypeOffset vectorAdd [0,0,0.03*_distToObj]), 0, 0, 0, _keyBindName, true, 0.05, "TahomaB", "center"]; //KeyBind Hint
+        drawIcon3D ["", [1,1,1,1], _target modelToWorldVisual (IMTypeOffset vectorAdd [0,0,-0.035*_distToObj]), 0, 0, 0, _keyBindName, true, 0.05, "TahomaB", "center"]; //KeyBind Hint
         if (_hasChildren) then { drawIcon3D ["", [1,1,1,1], positionCameraToWorld [0, -1, 2] , 0, 0, 0, IMKeyName, true, 0.03, "TahomaB", "center"] }; //menu keybind hint
 
         //execute action if key is pressed
@@ -229,7 +238,7 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
                 _displayText = "";
             };
             _pos = IMTarget modelToWorldVisual IMTypeOffset;
-            drawIcon3D ["\a3\ui_f\data\map\markers\military\dot_ca.paa", _color, _pos, 0.6, 0.6, 0, _displayText, true, 0.03, "TahomaB", "center"];
+            drawIcon3D [_icon, _color, _pos, 0.6, 0.6, 0, _displayText, true, 0.03, "TahomaB", "center"];
         };
 
         //Entry point
@@ -240,9 +249,10 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         };
 
         //refresh render data
-        if (!isNil "ActiveNodeData" && ( !(getPosASLVisual player isEqualTo PlayerPos) || !(getPosASLVisual IMTarget isEqualTo IMTargetPos) ) ) then {
+        if (!isNil "ActiveNodeData" && ( !(getPosASLVisual player isEqualTo PlayerPos) || !(getPosASLVisual IMTarget isEqualTo IMTargetPos) || (IMTargetStance isEqualTo stance IMTarget) ) ) then {
             PlayerPos = getPosASLVisual player;
             IMTargetPos = getPosASLVisual IMTarget;
+            IMTargetStance = stance IMTarget;
             ActiveNodeData call A3A_fnc_setActiveNode;
         };
 

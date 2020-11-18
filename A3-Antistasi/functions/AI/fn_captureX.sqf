@@ -2,7 +2,7 @@ private _unit = _this select 0;
 private _playerX = _this select 1;
 private _recruiting = _this select 3;
 
-[_unit,"remove"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_unit];
+[_unit,"captureX", false] remoteExec ["A3A_fnc_commonActions", 2]; //remove capture actions
 
 if (!alive _unit) exitWith {};
 

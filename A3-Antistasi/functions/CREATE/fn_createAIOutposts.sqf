@@ -135,7 +135,7 @@ _typeVehX = if (_sideX == Occupants) then {NATOFlag} else {CSATFlag};
 _flagX = createVehicle [_typeVehX, _positionX, [],0, "NONE"];
 _flagX allowDamage false;
 [_flagX] call A3A_fnc_initClassActions;
-[_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
+[_flagX,"take"] remoteExec ["A3A_fnc_commonActions", 2];
 _vehiclesX pushBack _flagX;
 
 // Only create ammoBox if it's been recharged (see reinforcementsAI)

@@ -85,7 +85,7 @@ _loadActionID = _object addAction [
 		    };
 			};
 	},
-	nil, 1, true, false, "", "isnull attachedTo _target && vehicle player == player;", 3.5, false, ""
+	nil, 1, true, false, "", "isnull attachedTo _target && vehicle player == player && _target != _this;", 3.5, false, ""
 ];
 
 if (_object isKindOf "CAManBase") then {_text = format ["Load %1 in Vehicle",name _object]} else {_text = "Load Cargo in Vehicle"};

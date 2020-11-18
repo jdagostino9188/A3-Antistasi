@@ -11,7 +11,7 @@ _carrierX playMoveNow "AcinPknlMstpSrasWrflDnon";
 [_carryX,"AinjPpneMrunSnonWnonDb"] remoteExec ["switchMove"];
 //_carryX setVariable ["carryX",true,true];
 _carryX setVariable ["helped",_carrierX,true];
-[_carryX,"remove"] remoteExec ["A3A_fnc_flagaction",0,_carryX];
+[_carryX,"heal1", false] remoteExec ["A3A_fnc_commonActions", 2];
 _carryX attachTo [_carrierX, [0,1.1,0.092]];
 _carryX setDir 180;
 _timeOut = time + 60;
@@ -19,7 +19,7 @@ _action = _carrierX addAction [format ["Release %1",name _carryX], {{detach _x} 
 
 waitUntil {sleep 0.5; (!alive _carryX) or !([_carrierX] call A3A_fnc_canFight) or !(_carryX getVariable ["incapacitated",false]) or ({!isNull _x} count attachedObjects _carrierX == 0) or (time > _timeOut) or (vehicle _carrierX != _carrierX)};
 
-_carrierX removeAction _action;
+_carrierX removeAction _action; //drop action (self contained)
 if (count attachedObjects _carrierX != 0) then {detach _carryX};
 _carrierX playMove "amovpknlmstpsraswrfldnon";
 sleep 2;
@@ -31,6 +31,6 @@ if (_carryX getVariable ["incapacitated",false]) then
 	[_carryX,true] remoteExec ["setUnconscious",_carryX];
 	};
 //_carryX setVariable ["carryX",false,true];
-[_carryX,"heal1"] remoteExec ["A3A_fnc_flagaction",0,_carryX];
+[_carryX,"heal1"] remoteExec ["A3A_fnc_commonActions", 2];
 sleep 5;
 _carryX setVariable ["helped",objNull,true];

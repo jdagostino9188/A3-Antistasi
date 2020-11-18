@@ -35,7 +35,7 @@ private _filename = "A3A_fnc_setInteraction";
     Public: true
 */
 
-params ["_obj", ["_text", ""], ["_code", {}], ["_condition", {false}], ["_distance", 50], ["_arguments", {nil}], ["_repeatable", [{true}, {true}]]];
+params ["_obj", ["_text", ""], ["_code", {}], ["_condition", {false}], ["_distance", 50], ["_arguments", {nil}], ["_repeatable", [{true}, {true}]], ["_icon", "\a3\ui_f\data\map\markers\military\dot_ca.paa"]];
 if (isNil "_obj" || {isNull _obj}) exitWith {false};
 if (isNil "InteractionSystemInit") then {[] spawn A3A_fnc_interactionInit};
 
@@ -55,6 +55,7 @@ _interactionMenu set [2, _condition];
 _interactionMenu set [3, _distance];
 _interactionMenu set [4, _arguments];
 _interactionMenu set [6, _repeatable];
+_interactionMenu set [7, _icon];
 _obj setVariable ["A3A_InteractionMenu", _interactionMenu, call (_repeatable#1)];
 
 true;

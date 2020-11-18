@@ -48,9 +48,7 @@ else
 	_unit stop true;
 	if (_inPlayerGroup) then
 		{
-		[_unit,"heal1"] remoteExec ["A3A_fnc_flagaction",0,_unit];
-		//[_unit,"carry"] remoteExec ["A3A_fnc_flagaction",0,_unit];
-		//_unit call jn_fnc_logistics_addAction;
+        [_unit,"heal1"] remoteExec ["A3A_fnc_commonActions", 2];
 		if (_injurer != Invaders) then {[_unit,true] remoteExec ["setCaptive",0,_unit]; _unit setCaptive true};
 		}
 	else
@@ -58,7 +56,7 @@ else
 		if ({if ((isPlayer _x) and (_x distance _unit < distanceSPWN2)) exitWith {1}} count allUnits != 0) then
 			{
 			_playersX = true;
-			[_unit,"heal"] remoteExec ["A3A_fnc_flagaction",0,_unit];
+			[_unit,"heal"] remoteExec ["A3A_fnc_commonActions", 2];
 			if (_unit != petros) then {if (_injurer != Invaders) then {[_unit,true] remoteExec ["setCaptive",0,_unit]; _unit setCaptive true}};
 			};
 		};
@@ -79,8 +77,7 @@ if (_isPlayer) then
 	group _unit setCombatMode "YELLOW";
 	if (isMultiplayer) then
 		{
-		[_unit,"heal1"] remoteExec ["A3A_fnc_flagaction",0,_unit];
-		//[_unit,"carry"] remoteExec ["A3A_fnc_flagaction",0,_unit];
+		[_unit,"heal1"] remoteExec ["A3A_fnc_commonActions", 2];
 		};
 	};
 
@@ -146,14 +143,14 @@ if (_isPlayer) then
 		player setVariable ["tf_globalVolume", _saveVolume];
 		player setVariable ["tf_voiceVolume", _saveVolumeVoice, true];
 		};
-	if (isMultiplayer) then {[_unit,"remove"] remoteExec ["A3A_fnc_flagaction",0,_unit]};
+	if (isMultiplayer) then {[_unit,"heal1", false] remoteExec ["A3A_fnc_commonActions", 2]};
 	}
 else
 	{
 	_unit stop false;
 	if (_inPlayerGroup or _playersX) then
 		{
-		[_unit,"remove"] remoteExec ["A3A_fnc_flagaction",0,_unit];
+		[_unit,"heal1", false] remoteExec ["A3A_fnc_commonActions", 2];
 		};
 	};
 

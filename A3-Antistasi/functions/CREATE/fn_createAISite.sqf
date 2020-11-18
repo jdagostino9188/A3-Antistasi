@@ -67,7 +67,7 @@ if(!debug) then
 _typeFlag = if (_side == Occupants) then {NATOFlag} else {CSATFlag};
 _flag = createVehicle [_typeFlag, _markerPos, [], 0, "NONE"];
 _flag allowDamage false;
-[_flag,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flag];
+[_flag,"take"] remoteExec ["A3A_fnc_commonActions", 2];
 
 _box = objNull;
 if(_marker in airportsX || {_marker in seaports || {_marker in outposts}}) then

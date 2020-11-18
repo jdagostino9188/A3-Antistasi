@@ -18,12 +18,8 @@ if (_markerX != "Synd_HQ") then
 		if (hasIFA) then {_veh setFlagTexture SDKFlagTexture};
 		_veh allowDamage false;
 		_vehiclesX pushBack _veh;
-		[_veh,"SDKFlag"] remoteExec ["A3A_fnc_flagaction",0,_veh];
-
-		if (_markerX in seaports) then
-		{
-			[_veh,"seaport"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_veh];
-		};
+        [_veh,"SDKFlag"] remoteExec ["A3A_fnc_commonActions",2];
+		if (_markerX in seaports) then {[_veh,"BuyBoat"] remoteExec ["A3A_fnc_commonActions",2]};
 	};
 	if ((_markerX in resourcesX) or (_markerX in factories)) then
 	{

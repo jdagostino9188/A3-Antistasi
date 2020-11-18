@@ -30,7 +30,6 @@ if ((!(_markerX in citiesX)) and (spawner getVariable _markerX != 2)) then
 	_flagX = _flagsX select 0;
 	};
 if (isNil "_flagX") then {_flagX = objNull};
-//[_flagX,"remove"] remoteExec ["A3A_fnc_flagaction",0,_flagX];
 
 if (_looser == teamPlayer) then
 	{
@@ -309,15 +308,11 @@ if (_winner == teamPlayer) then
 
 	if (!isNull _flagX) then
 	{
-		//[_flagX,"remove"] remoteExec ["A3A_fnc_flagaction",0,_flagX];
 		//_flagX setVariable ["isGettingCaptured", nil, true];
-		[_flagX,"SDKFlag"] remoteExec ["A3A_fnc_flagaction",0,_flagX];
+        [_flagX,"SDKFlag"] remoteExec ["A3A_fnc_commonActions",2];
 		[_flagX,SDKFlagTexture] remoteExec ["setFlagTexture",_flagX];
 		sleep 2;
-		//[_flagX,"unit"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
-		//[_flagX,"vehicle"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
-		//[_flagX,"garage"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
-		if (_markerX in seaports) then {[_flagX,"seaport"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX]};
+		if (_markerX in seaports) then {[_flagX,"BuyBoat"] remoteExec ["A3A_fnc_commonActions",2]};
 	};
 	[_prestigeOccupants,_prestigeInvaders] spawn A3A_fnc_prestige;
 	waitUntil {sleep 1; ((spawner getVariable _markerX == 2)) or ({((side group _x) in [_looser,_other]) and (_x getVariable ["spawner",false]) and ([_x,_markerX] call A3A_fnc_canConquer)} count allUnits > 3*({(side _x == teamPlayer) and ([_x,_markerX] call A3A_fnc_canConquer)} count allUnits))};
@@ -342,9 +337,11 @@ else
 		//_flagX setVariable ["isGettingCaptured", nil, true];
 		if (_looser == teamPlayer) then
 		{
-			[_flagX,"remove"] remoteExec ["A3A_fnc_flagaction",0,_flagX];
-			sleep 2;
-			[_flagX,"take"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_flagX];
+            //remove old flag actions
+            [_flagX, "SDKFlag", false] remoteExec ["A3A_fnc_commonActions", 2];
+            if (_markerX in seaports) then {[_flagX,"BuyBoat", false] remoteExec ["A3A_fnc_commonActions",2]};
+            //add capture action
+            [_flagX, "take"] remoteExec ["A3A_fnc_commonActions", 2];
 		};
 		if (_winner == Occupants) then
 		{

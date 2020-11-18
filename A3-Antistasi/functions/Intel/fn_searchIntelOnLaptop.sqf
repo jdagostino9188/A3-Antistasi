@@ -1,23 +1,22 @@
 private _intel = _this select 0;
-private _searchAction = _this select 2;
+
 
 /*  Handles the action which downloads large intel
 *   Params:
 *       _intel : OBJECT : The object which is holding the intel
-*       _searchAction : NUMBER : The ID of the action which started this script
 *
 *   Returns:
 *       Nothing
 */
 
 //Remove so no double calls
-[_intel, _searchAction] remoteExec ["removeAction", [teamPlayer, civilian], _intel];
+[_intel, "Intel_Large", false] remoteExec ["A3A_fnc_commonActions", 2];
 
 private _bomb = _intel getVariable ["trapBomb", objNull];
 private _isTrap = !(isNull _bomb);
 if(_isTrap) exitWith
 {
-    _intel remoteExecCall ["removeAllActions", 0];
+    _intel remoteExecCall ["removeAllActions", 0]; //shouldnt be any actions on this, but it dosnt hurt as were blowing it up anyways
     _intel setObjectTextureGlobal [0, "Pictures\Intel\laptop_die.paa"];
     {
         [petros,"hint","The screen says:<br/><br/>Prepare to die!", "Search Intel"] remoteExec ["A3A_fnc_commsMP",_x];
@@ -261,6 +260,7 @@ else
 {
     //Players failed to retrieve the intel
     _intel setObjectTextureGlobal [0, "a3\structures_f\items\electronics\data\electronics_screens_laptop_co.paa"];
-    _intel remoteExec ["removeAllActions", [teamPlayer, civilian], _intel];
-    [_intel, "Intel_Large"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian], _intel];
+    _intel remoteExec ["removeAllActions", [teamPlayer, civilian]]; //for the error actions (self contained, and no other actions on laptop, this is fine)
+    remoteExec ["", [teamPlayer, civilian], _intel]; //but the JIP shouldnt be left to removeAllActions (unlikely to cause problems, but betteer safe)
+    [_intel, "Intel_Large"] remoteExec ["A3A_fnc_commonActions", 2];
 };

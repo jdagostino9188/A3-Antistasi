@@ -1,18 +1,16 @@
-params ["_unit", "_player", "_actionID"];
+params ["_unit", "_player"];
 
 /*  The action of interrogating a surrendered unit.
 *   Params:
 *       _unit : OBJECT : The unit which will be interrogated
 *       _player : OBJECT : The unit which is interrogating
-*       _unused : NOT USED
-*       _actionID : NUMBER : The ID of the interrogate action
 *
 *   Returns:
 *       Nothing
 */
 
 //Removing action
-[_unit, _actionID] remoteExec ["removeAction", [teamPlayer, civilian], _unit];
+[_unit, false, 0, ["Interrogate", A3A_fnc_interrogate, {(isPlayer _this) and (_this == _this getVariable ['owner',objNull])}, 4, {nil}, 0]] remoteExec ["A3A_fnc_actionManager", 2];
 
 if (!alive _unit) exitWith {};
 if (_unit getVariable ["interrogated", false]) exitWith {};

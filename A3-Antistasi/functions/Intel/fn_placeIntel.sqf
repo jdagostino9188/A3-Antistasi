@@ -123,11 +123,11 @@ if(_isLarge) then
 		] remoteExec ["BIS_fnc_holdActionAdd", 0, _bomb];
     };
     _intel setVariable ["marker", _marker, true];
-    [_intel, "Intel_Large"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian], _intel];
+    [_intel, "Intel_Large"] remoteExec ["A3A_fnc_commonActions", 2];
 }
 else
 {
-    [_intel, "Intel_Medium"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_intel];
+    [_intel, "Intel_Medium"] remoteExec ["A3A_fnc_commonActions", 2];
 };
 
 [_marker, _desk, _intel] spawn

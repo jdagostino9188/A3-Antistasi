@@ -57,7 +57,6 @@ class A3A
 		class FIAradio {};
 		class findBasesForConvoy {};
 		class findNearestGoodRoad {};
-		class flagaction {};
 		class fogCheck {};
 		class garbageCleaner {};
 		class garrisonInfo {};
@@ -335,6 +334,7 @@ class A3A
         class addVanillaAction {};
         class cleanActionJIP {};
         class codeToString {};
+		class commonActions {};
         class initClassActions {};
 		class initCuratorObjReg {};
         class removeActionFromClass {};
@@ -421,7 +421,6 @@ class A3A
 		class launcherInfo {};
 		class loot {};
 		class randomRifle {};
-		class transfer {};
 		class unlockEquipment {};
 		class vehicleSort {};
 	};

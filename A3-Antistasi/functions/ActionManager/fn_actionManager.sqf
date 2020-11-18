@@ -147,10 +147,10 @@ private _JIPMessage = if (_targets isEqualTo 0) then { format ["%1_%2_%3", _obje
 private _quickInteraction = {
     _JIPMessage = if (_targets isEqualTo 0) then { format ["%1_QuickInteraction", _objectString] } else { false }; //unique format of JIP message
     if (_add) then {
-        [_object, _name, _code, _condition, _distance, _arguments, _repeatable] remoteExecCall ["A3A_fnc_setInteraction", _targets, _JIPMessage];
+        [_object, _name, _code, _condition, _distance, _arguments, _repeatable, _icon] remoteExecCall ["A3A_fnc_setInteraction", _targets, _JIPMessage];
     } else {
         remoteExecCall ["", _targets, _JIPMessage];
-        [_object, "", {}, {false}, 50, {nil}, [{true}, {false}]] remoteExecCall ["A3A_fnc_setInteraction", _targets];
+        [_object] remoteExecCall ["A3A_fnc_setInteraction", _targets];
     };
 };
 
@@ -171,7 +171,7 @@ private _aceInteraction = {
 
     //fix for bad node root offset
     _offset = [_object] call A3A_fnc_getTypeOffset;
-    if !(_offset isEqualTo [0,0,0] && (_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is prefrerable
+    if ((_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is prefrerable
         if ((_path#0) isEqualTo "ACE_MainActions") then {_path set [0,"Interactions"]};
         if (isNil "ACE_Interaction_Menu_BadClassOffset") then {ACE_Interaction_Menu_BadClassOffset = []};
         if !(_object in ACE_Interaction_Menu_BadClassOffset) then {
@@ -262,5 +262,5 @@ if (_add) then {
     actionJIPRec deleteAt (actionJIPRec find [_object, _JIPMessage]);
 };
 //give time for new info to propigate (avoid overwriting something)
-sleep 1;
+sleep 0.1;
 ActionObjectManager deleteAt (ActionObjectManager find _object);

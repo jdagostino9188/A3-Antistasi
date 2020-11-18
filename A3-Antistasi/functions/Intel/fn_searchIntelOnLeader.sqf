@@ -10,7 +10,7 @@ params ["_squadLeader", "_caller", "_searchAction"];
 *       Nothing
 */
 
-[_squadLeader, _searchAction] remoteExec ["removeAction", [teamPlayer, civilian], _squadLeader];
+[_squadLeader, "Intel_Small", false] remoteExec ["A3A_fnc_commonActions",2];
 
 private _timeForSearch = 10 + random 15;
 private _side = _squadLeader getVariable "side";
@@ -68,7 +68,7 @@ if(_wasCancelled) exitWith
 {
     ["Intel", "Search cancelled"] call A3A_fnc_customHint;
     _caller setVariable ["intelFound", nil];
-    [_squadLeader, "Intel_Small"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_squadLeader];
+    [_squadLeader, "Intel_Small"] remoteExec ["A3A_fnc_commonActions",2];
 };
 
 if(_caller getVariable ["intelFound", false]) then
@@ -90,6 +90,6 @@ if(_caller getVariable ["intelFound", false]) then
 }
 else
 {
-    [_squadLeader, "Intel_Small"] remoteExec ["A3A_fnc_flagaction",[teamPlayer,civilian],_squadLeader];
+    [_squadLeader, "Intel_Small"] remoteExec ["A3A_fnc_commonActions",2];
 };
 _caller setVariable ["intelFound", nil];
