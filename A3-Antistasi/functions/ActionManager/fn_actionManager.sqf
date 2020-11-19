@@ -176,7 +176,7 @@ private _aceInteraction = {
         if (isNil "ACE_Interaction_Menu_BadClassOffset") then {ACE_Interaction_Menu_BadClassOffset = []};
         if !(typeOf _object in ACE_Interaction_Menu_BadClassOffset) then {
             ACE_Interaction_Menu_BadClassOffset pushBack (typeOf _object);
-            private _action = ["Interactions","Interactions","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],compile format ["%1",_offset],2,[false,false,false,false,false],{}];
+            private _action = ["Interactions","Interactions","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],compile format ["%1",_offset],4,[false,false,false,false,false],{}];
             [typeOf _object, 0, [], _action] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", typeOf _object]];
         };
     };
