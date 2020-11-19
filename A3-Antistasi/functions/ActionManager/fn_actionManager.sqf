@@ -118,7 +118,7 @@ if ( (_object isEqualType "") && (hasAce && InteractionEnabled isEqualTo 1)) exi
     _code = compile (_addonCode + _code);
 
     if (_add) then {
-        [_object, 0, _path, [_name, _name, _icon, _code, _condition, {}, _arguments, [0,0,0], _distance, [false,false,false,false,false], {}]] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", _targets, _JIPMessage];
+        [_object, 0, _path, [_name, _name, _icon, _code, _condition, {}, _arguments, [0,0,0], _distance, [false,false,false,false,false], {}], _useInheritance] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", _targets, _JIPMessage];
     } else {
         remoteExecCall ["", _targets, _JIPMessage]; //clear JIP
         [_object, 0, _path + [_name]] remoteExecCall ["ace_interact_menu_fnc_removeActionFromClass", _targets];
