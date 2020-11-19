@@ -171,12 +171,12 @@ private _aceInteraction = {
 
     //fix for bad node root offset
     _offset = [_object] call A3A_fnc_getTypeOffset;
-    if (!(_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is prefrerable
+    if (!(_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is preferable
         if ((_path#0) isEqualTo "ACE_MainActions") then {_path set [0,"Interactions"]};
         if (isNil "ACE_Interaction_Menu_BadClassOffset") then {ACE_Interaction_Menu_BadClassOffset = []};
-        if !(_object in ACE_Interaction_Menu_BadClassOffset) then {
-            ACE_Interaction_Menu_BadClassOffset pushBack _object;
-            private _action = ["Interactions", "Interactions", "\a3\ui_f\data\map\markers\military\dot_ca.paa", {}, {true}, nil, nil, _offset] call ace_interact_menu_fnc_createAction;
+        if !(typeOf _object in ACE_Interaction_Menu_BadClassOffset) then {
+            ACE_Interaction_Menu_BadClassOffset pushBack (typeOf _object);
+            private _action = ["Interactions","Interactions","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],compile format ["%1",_offset],2,[false,false,false,false,false],{}];
             [typeOf _object, 0, [], _action] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", typeOf _object]];
         };
     };
