@@ -85,6 +85,13 @@ _action params [
 //exit if bad action data
 if (isNil "_name") exitWith {};
 
+//add new base node to all ace menus to host all antistasi actions
+private _addAceBaseNode = {
+    private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},6,[false,false,false,false,false],{}];
+    [_this, 0, [], _baseAction] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", _this]];
+};
+if (isNil "A3A_AM_AceInit") then { "All" call _addAceBaseNode; A3A_AM_AceInit = true };
+
 //path or quick interaction
 private ["_path", "_isQuickInteraction"];
 if (_optionalArgument isEqualType []) then {
@@ -104,8 +111,10 @@ if ( (_object isEqualType "") && _notAceAction) exitWith {
 
 if ( (_object isEqualType "") && (hasAce && InteractionEnabled isEqualTo 1)) exitWith {
     private _JIPMessage = if (_targets isEqualTo 0) then { format ["%1_%2_%3", _object, _optionalArgument, _name] } else { false };
-    if (isNil "_path") then {_path = ["ACE_MainActions"]};
+    if (isNil "_path") then {_path = ["Antistasi"]};
     [_object] call ACE_interact_menu_fnc_compileMenu;
+
+    if ((ace_interact_menu_ActNamespace getVariable _object) findIf {(_x#0#0) isEqualTo "Antistasi"} isEqualTo -1) then { _object call _addAceBaseNode };
 
     //fix code format and unify condition var names
     if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};
@@ -166,20 +175,10 @@ private _interaction = {
 
 //Ace Interaction Menu
 private _aceInteraction = {
-    if (isNil "_path") then {_path = ["ACE_MainActions"]};
+    if (isNil "_path") then {_path = ["Antistasi"]};
     [_object] call ACE_interact_menu_fnc_compileMenu; //make sure menu is compiled before doing something with the objects iteraction menu
 
-    //fix for bad node root offset
-    _offset = [_object] call A3A_fnc_getTypeOffset;
-    if (!(_offset isEqualTo [0,0,0]) && !(_object isKindOf "CAManBase")) then { //CAManBase get a offset but ace default is preferable
-        if ((_path#0) isEqualTo "ACE_MainActions") then {_path set [0,"Interactions"]};
-        if (isNil "ACE_Interaction_Menu_BadClassOffset") then {ACE_Interaction_Menu_BadClassOffset = []};
-        if !(typeOf _object in ACE_Interaction_Menu_BadClassOffset) then {
-            ACE_Interaction_Menu_BadClassOffset pushBack (typeOf _object);
-            private _action = ["Interactions","Interactions","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],compile format ["%1",_offset],4,[false,false,false,false,false],{}];
-            [typeOf _object, 0, [], _action] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", typeOf _object]];
-        };
-    };
+    if ((ace_interact_menu_ActNamespace getVariable typeOf _object) findIf {(_x#0#0) isEqualTo "Antistasi"} isEqualTo -1) then { typeOf _object call _addAceBaseNode };
 
     //fix condition formating
     if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};

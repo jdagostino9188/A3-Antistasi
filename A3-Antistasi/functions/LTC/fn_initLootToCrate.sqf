@@ -1,4 +1,4 @@
-//server exec single time, adds LTC actions as class actions to all LTC boxes
+//server executed single time, adds LTC actions as class actions to all LTC boxes
 if (!isServer) exitWith {};
 if (!isNil "A3A_LTCInit") exitWith {};
 
