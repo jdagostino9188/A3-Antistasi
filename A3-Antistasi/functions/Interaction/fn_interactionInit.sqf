@@ -176,7 +176,7 @@ InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
         } else {
             _keyBindName = "";
             _iconToDraw = "\a3\ui_f\data\map\markers\military\dot_ca.paa";
-            _color = [0.9,0.3,0.3,1];
+            _color = [1,1,1,1];
             _displayText = "";
         };
 
