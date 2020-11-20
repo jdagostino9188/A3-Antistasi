@@ -17,7 +17,7 @@
     Example: private _offset = [_object] call A3A_fnc_getTypeOffset;
 */
 params ["_object"];
-if (isNil "_object") exitWith {[0,0,0.1]};
+if (isNil "_object") exitWith {[0,0,0]};
 
 private ["_type", "_isObject"];
 if (_object isEqualType objNull) then {_type = typeOf _object; _isObject = true} else {_type = _object; _isObject = false};
@@ -27,5 +27,5 @@ switch (true) do {
     case (_type isKindOf "FlagCarrierCore"): { [-0.12,-0.38,-2.5] }; //Flag
     case (_type isEqualTo "Land_TentSolar_01_olive_F"): { [0,0,0.3] }; //tent
     case (_type isEqualTo "MapBoard_seismic_F"): { [0,-0.2,0.5] }; //map
-    default { [0,0,0.1] };
+    default { [0,0,0.15] };
 };

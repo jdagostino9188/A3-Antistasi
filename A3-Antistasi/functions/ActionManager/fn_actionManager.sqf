@@ -87,7 +87,7 @@ if (isNil "_name") exitWith {};
 
 //add new base node to all ace menus to host all antistasi actions
 private _addAceBaseNode = {
-    private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},6,[false,false,false,false,false],{}];
+    private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},50,[false,false,false,false,false],{}];
     [_this, 0, [], _baseAction] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", _this]];
 };
 if (isNil "A3A_AM_AceInit") then { "All" call _addAceBaseNode; A3A_AM_AceInit = true };
@@ -119,7 +119,7 @@ if ( (_object isEqualType "") && (hasAce && InteractionEnabled isEqualTo 1)) exi
     //fix code format and unify condition var names
     if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};
     if (_condition isEqualType true) then {_condition = str _condition};
-    private _addonCondition = "params ['_originalTarget', '_player', '_params']; private _target = vehicle _originalTarget; private _this = _player;";
+    private _addonCondition = "params ['_originalTarget', '_player', '_params']; private _target = vehicle _originalTarget; private _this = _player;" + format [" if (_target distance _this > %1) exitWith {false};", _distance];
     _condition = compile (_addonCondition + _condition);
 
     if (_code isEqualType {}) then {_code = [_code] call A3A_fnc_codeToString};
@@ -183,7 +183,7 @@ private _aceInteraction = {
     //fix condition formating
     if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};
     if (_condition isEqualType true) then {_condition = str _condition};
-    private _addonCondition = "params ['_originalTarget', '_player', '_params']; private _target = vehicle _originalTarget; private _this = _player;";
+    private _addonCondition = "params ['_originalTarget', '_player', '_params']; private _target = vehicle _originalTarget; private _this = _player;" + format [" if (_target distance _this > %1) exitWith {false};", _distance];
     _condition = compile (_addonCondition + _condition);
 
     //fix code formating
