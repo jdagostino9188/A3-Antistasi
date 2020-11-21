@@ -21,7 +21,7 @@ if (!isNil "A3A_LTCInit") exitWith {};
 ["Box_IND_Wps_F", true, 0, [
 	"Carry Crate",
 	{[_this#0, true] call A3A_fnc_carryCrate;}
-	, {(attachedTo _target isEqualTo objNull) && ({!(_x isEqualTo objNull)} count attachedObjects _this isEqualTo 0)}
+	, {(attachedTo _target isEqualTo objNull) && ({!(isNull _x)} count attachedObjects _this isEqualTo 0)}
 	, 3
 	, {nil}
 	, 1
@@ -30,7 +30,7 @@ if (!isNil "A3A_LTCInit") exitWith {};
 ["Box_IND_Wps_F", true, 0, [
 	"Drop Crate",
 	{[nil, false] call A3A_fnc_carryCrate;}
-	, {_this getVariable ['carryingCrate', false]}
+	, {(attachedTo _target isEqualTo _this)}
 	, 3
 	, {nil}
 	, 1

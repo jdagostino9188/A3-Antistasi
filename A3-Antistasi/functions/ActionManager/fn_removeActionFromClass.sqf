@@ -17,6 +17,11 @@
     Public: [No]
     Dependencies:
 
+    Data structure:
+        (inherited)Class Actions: [ClassName, Action Array]
+        Action Array: [Action Data array]
+        Action Data array: [Action, Arguments]
+
     Example: [_object, _action, _optionalArgument, _useInheritance] call A3A_fnc_removeActionFromClass;
 */
 params [ ["_class", "N/A"], "_action", ["_optionalArgument", false, [ [], false ]] ];

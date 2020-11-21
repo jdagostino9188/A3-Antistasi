@@ -131,6 +131,12 @@ if (isNil "InteractionKeyEH") then {//percistant trough respawn
 InteractionMenuRenderer = addMissionEventHandler ["Draw3D", {
     if (dialog) exitWith {IMNodeSelected = false};
     if !(ace_interact_menu_openedMenuType < 0) exitWith {IMNodeSelected = false}; //dont render when ace interaction menu is open, no overlaping icons etc.
+    if (hasAce) then { //to get around lazy ace add action to class
+        if ((ace_interact_menu_ActNamespace getVariable typeOf (getCursorObjectParams#0)) findIf {(_x#0#0) isEqualTo "Antistasi"} isEqualTo -1) then {
+            private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},50,[false,false,false,false,false],{}];
+            [typeOf (getCursorObjectParams#0), 0, [], _baseAction, false] call ace_interact_menu_fnc_addActionToClass;
+        };
+    };
 
     //overide for use with conditions to match vanilla actions
     private _this = player;

@@ -25,7 +25,7 @@ private _filename = "fn_commonActions";
 switch _action do {
 
     case "BuyBoat": {
-        [_object, _add, 0, ["Buy Boat", {[vehSDKBoat] spawn A3A_fnc_addFIAVeh}, {(isPlayer _this) and (_this == _this getVariable ['owner',objNull])}, 4, {nil}, 6]] spawn A3A_fnc_actionManager;
+        [_object, _add, 0, ["Buy Boat", {[vehSDKBoat] spawn A3A_fnc_addFIAVeh}, {(isPlayer _this) and (_this == _this getVariable ['owner',objNull])}, 6, {nil}, 6]] spawn A3A_fnc_actionManager;
     };
 
     case "SDKFlag": {
@@ -34,15 +34,15 @@ switch _action do {
             , "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)"
         , 50, {nil}, 1]] spawn A3A_fnc_actionManager;
 
-        [_object, _add, 0, ["Faction Garage", {[GARAGE_FACTION] spawn A3A_fnc_garage;}, "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)", 4, {nil}, 5]] spawn A3A_fnc_actionManager;
+        [_object, _add, 0, ["Faction Garage", {[GARAGE_FACTION] spawn A3A_fnc_garage;}, "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)", 6, {nil}, 5]] spawn A3A_fnc_actionManager;
         if (isMultiplayer) then {
-            [_object, _add, 0, ["Personal Garage", {[GARAGE_PERSONAL] spawn A3A_fnc_garage;}, "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)", 4, {nil}, 4]] spawn A3A_fnc_actionManager;
+            [_object, _add, 0, ["Personal Garage", {[GARAGE_PERSONAL] spawn A3A_fnc_garage;}, "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)", 6, {nil}, 4]] spawn A3A_fnc_actionManager;
         };
 
         [_object, _add, 0, ["Buy Vehicle"
             , {if ([player,300] call A3A_fnc_enemyNearCheck) then {["Purchase Vehicle", "You cannot buy vehicles while there are enemies near you"] call A3A_fnc_customHint;} else {nul = createDialog "vehicle_option"}}
             , "(isPlayer _this) and (_this == _this getVariable ['owner',objNull]) and (side (group _this) == teamPlayer)"
-        , 4, {nil}, 7]] spawn A3A_fnc_actionManager;
+        , 6, {nil}, 7]] spawn A3A_fnc_actionManager;
     };
 
     case "take": {

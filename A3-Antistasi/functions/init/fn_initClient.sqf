@@ -459,7 +459,13 @@ flagX allowDamage false;
 vehicleBox allowDamage false;
 
 if (petros == leader group petros) then { group petros setGroupId ["Petros","GroupColor4"] };
-if (hasACE) then { [vehicleBox, VehicleBox] call ace_common_fnc_claim;};	//Disables ALL Ace Interactions
+if (hasACE) then {
+    [vehicleBox, VehicleBox] call ace_common_fnc_claim; //Disables ALL Ace Interactions
+    private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},50,[false,false,false,false,false],{}];
+    [NATOFlag, 0, [], _baseAction] call ace_interact_menu_fnc_addActionToClass;
+    [CSATFlag, 0, [], _baseAction] call ace_interact_menu_fnc_addActionToClass;
+    [SDKFlag, 0, [], _baseAction] call ace_interact_menu_fnc_addActionToClass;// need to add the antistasi base node to the flags manualy
+};
 
 //Adds a light to the flag
 private _flagLight = "#lightpoint" createVehicle (getPos flagX);

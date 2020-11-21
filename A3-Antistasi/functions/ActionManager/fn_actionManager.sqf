@@ -85,13 +85,6 @@ _action params [
 //exit if bad action data
 if (isNil "_name") exitWith {};
 
-//add new base node to all ace menus to host all antistasi actions
-private _addAceBaseNode = {
-    private _baseAction = ["Antistasi","Antistasi","\a3\ui_f\data\map\markers\military\dot_ca.paa",{},{true},{},[],{[_target] call A3A_fnc_getTypeOffset},50,[false,false,false,false,false],{}];
-    [_this, 0, [], _baseAction] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", 0, format ["%1_BaseACENode", _this]];
-};
-if (isNil "A3A_AM_AceInit") then { "All" call _addAceBaseNode; A3A_AM_AceInit = true };
-
 //path or quick interaction
 private ["_path", "_isQuickInteraction"];
 if (_optionalArgument isEqualType []) then {
@@ -99,38 +92,12 @@ if (_optionalArgument isEqualType []) then {
     _isQuickInteraction = false;
 } else {_isQuickInteraction = _optionalArgument};
 
-//if adding to class non ace
-private _notAceAction = !(hasAce && InteractionEnabled isEqualTo 1) || _isQuickInteraction;
-if ( (_object isEqualType "") && _notAceAction) exitWith {
+//if adding to class
+if (_object isEqualType "") exitWith {
     if (_add) then {
         [_object, _action, _optionalArgument, _useInheritance] call A3A_fnc_addActionToClass;
     } else {
         [_object, _action, _optionalArgument, _useInheritance] call A3A_fnc_removeActionFromClass;
-    };
-};
-
-if ( (_object isEqualType "") && (hasAce && InteractionEnabled isEqualTo 1)) exitWith {
-    private _JIPMessage = if (_targets isEqualTo 0) then { format ["%1_%2_%3", _object, _optionalArgument, _name] } else { false };
-    if (isNil "_path") then {_path = ["Antistasi"]};
-    [_object] call ACE_interact_menu_fnc_compileMenu;
-
-    if ((ace_interact_menu_ActNamespace getVariable _object) findIf {(_x#0#0) isEqualTo "Antistasi"} isEqualTo -1) then { _object call _addAceBaseNode };
-
-    //fix code format and unify condition var names
-    if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};
-    if (_condition isEqualType true) then {_condition = str _condition};
-    private _addonCondition = "params ['_originalTarget', '_player', '_params']; private _target = vehicle _originalTarget; private _this = _player;" + format [" if (_target distance _this > %1) exitWith {false};", _distance];
-    _condition = compile (_addonCondition + _condition);
-
-    if (_code isEqualType {}) then {_code = [_code] call A3A_fnc_codeToString};
-    private _addonCode = "params ['_target', '_player', '_params']; _this = [_target, _player, " + str (_path + [_name]) + ", _params];";
-    _code = compile (_addonCode + _code);
-
-    if (_add) then {
-        [_object, 0, _path, [_name, _name, _icon, _code, _condition, {}, _arguments, [0,0,0], _distance, [false,false,false,false,false], {}], _useInheritance] remoteExecCall ["ace_interact_menu_fnc_addActionToClass", _targets, _JIPMessage];
-    } else {
-        remoteExecCall ["", _targets, _JIPMessage]; //clear JIP
-        [_object, 0, _path + [_name]] remoteExecCall ["ace_interact_menu_fnc_removeActionFromClass", _targets];
     };
 };
 
@@ -178,7 +145,6 @@ private _aceInteraction = {
     if (isNil "_path") then {_path = ["Antistasi"]};
     [_object] call ACE_interact_menu_fnc_compileMenu; //make sure menu is compiled before doing something with the objects iteraction menu
 
-    if ((ace_interact_menu_ActNamespace getVariable typeOf _object) findIf {(_x#0#0) isEqualTo "Antistasi"} isEqualTo -1) then { typeOf _object call _addAceBaseNode };
 
     //fix condition formating
     if (_condition isEqualType {}) then {_condition = [_condition] call A3A_fnc_codeToString};

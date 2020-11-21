@@ -46,7 +46,7 @@ if (isMultiplayer) then {
 ]] spawn A3A_fnc_actionManager;
 
 if (LootToCrateEnabled) then {
-	[vehicleBox, true, 0, ["Buy loot box for 10€", {_this call A3A_fnc_spawnCrate}, "isNull attachedTo _target && _this isEqualTo theBoss", 4, {nil}, 1]] spawn A3A_fnc_actionManager;
+	[vehicleBox, true, 0, ["Buy loot box for 10€", {_this call A3A_fnc_spawnCrate}, "isNull attachedTo _target && (_this == _this getVariable ['owner',objNull]) && (side (group _this) == teamPlayer)", 4, {nil}, 1]] spawn A3A_fnc_actionManager;
 };
 
 //map
