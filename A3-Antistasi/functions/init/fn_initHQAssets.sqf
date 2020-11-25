@@ -62,4 +62,5 @@ if (isMultiplayer) then {[mapX, true, 0, ["AI Load Info", { [] remoteExec ["A3A_
 [fireX, true, 0, ["Rest for 8 Hours", A3A_fnc_skiptime, "_this isEqualTo theBoss", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
 [fireX, true, 0, ["Clear Nearby Forest", A3A_fnc_clearForest, "_this isEqualTo theBoss", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
 [fireX, true, 0, ["I hate the fog", { [10,0] remoteExec ["setFog",2]; }, "_this isEqualTo theBoss", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
+[fireX, true, 0, ["Rain rain go away", { [10,0] remoteExec ["setRain",2]; }, "_this isEqualTo theBoss", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
 [fireX, true, 0, ["Move this asset", {_this spawn A3A_fnc_moveHQObject}, "isNull attachedTo _target && _this isEqualTo theBoss", 6, {nil}, 0]] spawn A3A_fnc_actionManager;
