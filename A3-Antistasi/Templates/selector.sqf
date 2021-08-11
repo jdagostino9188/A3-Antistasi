@@ -56,6 +56,7 @@ private _autoPickAI = {
                     default {"USAF"};
                 };
             };
+			case (A3A_hasIFA): {"Wehrmacht"};
             case (A3A_hasVN): {"PAVN"};
             default {
                 switch(true) do {
@@ -78,6 +79,7 @@ private _autoPickAI = {
             };
         };
         case (A3A_hasRHS): {"AFRF"};
+		case (A3A_hasIFA): {"WW2 Soviets"};
         case (A3A_hasVN): {"MACV"};
         default {"CSAT"};
     };
@@ -93,6 +95,7 @@ private _autoPickReb = {
             };
         };
         case (A3A_hasRHS): {"NAPA"};
+		case (A3A_hasIFA): {"AK"};
         case (A3A_hasVN): {"POF"};
         default {
             switch(true) do {
@@ -137,6 +140,8 @@ private _AIFactionEnums = [
     , ["HIDF", A3A_has3CBFactions]
     , ["MACV", A3A_hasVN]
     , ["PAVN", A3A_hasVN]
+	, ["Wehrmacht", A3A_hasIFA]
+	, ["WW2 Soviets", A3A_hasIFA]
 ];
 private _rebFactionEnums = [
     [_autoPickReb, true]
@@ -146,6 +151,7 @@ private _rebFactionEnums = [
     , ["CNM", A3A_has3CBFactions]
     , ["TKM", A3A_has3CBFactions]
     , ["POF", A3A_hasVN]
+	, ["AK", A3A_hasIFA]
 ];
 private _civFactionEnums = [
     [_autoPickCiv, true]
@@ -153,6 +159,7 @@ private _civFactionEnums = [
     , ["RHS", A3A_hasRHS]
     , ["Factions", A3A_has3CBFactions]
     , ["VN", A3A_hasVN]
+	, ["IFA", A3A_hasIFA]
 ];
 
 //======================|
@@ -207,6 +214,22 @@ private _pickAITemplate = {
                 default { "Templates\Templates\RHS\RHS_AI_AFRF_Arid.sqf" };
             };
         };
+		
+        //IFA
+        case "Wehrmacht": {
+            switch(true) do {
+                case (toLower worldName in arcticmaps): { "Templates\Templates\IFA\IFA_AI_WEH_Arctic.sqf" };
+                case (toLower worldName in temperatemaps): { "Templates\Templates\IFA\IFA_AI_WEH_Temperate.sqf" };
+                default { "Templates\Templates\IFA\IFA_AI_WEH_Arid.sqf" };
+            };
+        };
+        case "WW2 Soviets": {
+            switch(true) do {
+                case (toLower worldName in arcticmaps): { "Templates\Templates\IFA\IFA_AI_SOV_Artic.sqf" };
+                case (toLower worldName in temperatemaps): { "Templates\Templates\IFA\IFA_AI_SOV_Temperate.sqf" };
+                default { "Templates\Templates\IFA\IFA_AI_SOV_Arid.sqf" };
+            };
+        };
 
         //VN
         case "PAVN": { "Templates\Templates\VN\VN_PAVN.sqf" };
@@ -250,6 +273,15 @@ private _pickRebTemplate = {
             };
         };
 
+        //IFA
+        case "AK": {
+            switch(true) do {
+                case (toLower worldName in arcticmaps): { "Templates\Templates\RHS\IFA_Reb_POL_Arctic.sqf" };
+                case (toLower worldName in temperatemaps): { "Templates\Templates\RHS\RHS_Reb_NAPA_Temperate.sqf" };
+                default { "Templates\Templates\IFA\IFA_Reb_POL_Arid.sqf" };
+            };
+        };
+
         //VN
         case "POF": { "Templates\Templates\VN\VN_Reb_POF.sqf" };
 
@@ -275,6 +307,7 @@ private _pickCIVTemplate = {
             };
         };
         case "RHS": { "Templates\Templates\RHS\RHS_Civ.sqf" };
+		case "IFA": { "Templates\Templates\IFA\IFA_Civ.sqf" };
         case "VN": { "Templates\Templates\VN\VN_CIV.sqf" };
         case "Vanilla": { "Templates\Templates\Vanilla\Vanilla_Civ.sqf" };
     };
@@ -388,8 +421,8 @@ if (A3A_hasRHS) then {call compile preProcessFileLineNumbers "Templates\Template
 if (A3A_has3CBFactions) then {call compile preProcessFileLineNumbers "Templates\Templates\3CB\3CBFactions_Logistics_Nodes.sqf"};
 if (A3A_has3CBBAF) then {call compile preProcessFileLineNumbers "Templates\Templates\3CB\3CBBAF_Logistics_Nodes.sqf"};
 if (A3A_hasVN) then {call compile preProcessFileLineNumbers "Templates\Templates\VN\VN_Logistics_Nodes.sqf"};
+if (A3A_hasIFA) then {call compile preProcessFileLineNumbers "Templates\Templates\IFA\IFA_Logistics_Nodes.sqf"};		
 
-//if (A3A_hasIFA) then {call compile preProcessFileLineNumbers "Templates\IFA\IFA_Logistics_Nodes.sqf"};		//disabled until imtegrated
 //if (A3A_hasFFAA) then {call compile preProcessFileLineNumbers "Templates\FFAA\FFAA_Logistics_Nodes.sqf"};		//disabled until imtegrated
 //if (A3A_hasD3S) then {call compile preProcessFileLineNumbers "Templates\AddonVics\d3s_Logi_Nodes.sqf";};		//disabled until imtegrated
 //if (A3A_hasRDS) then {call compile preProcessFileLineNumbers "Templates\AddonVics\rds_Logi_Nodes.sqf";};		//disabled until imtegrated

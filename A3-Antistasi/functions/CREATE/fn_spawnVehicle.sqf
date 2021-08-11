@@ -58,6 +58,7 @@ private _velocity = 0;
 private _veh = objNull;
 switch (toLower _sim) do {
     case "airplanex";
+	case "airplane";
     case "helicopterrtd";
     case "helicopterx": {
         _velocity = getNumber(configFile >> "CfgVehicles" >> _type >> "stallSpeed") / 3.6 * 1.1;  // kilometres per hour to metres per second * 110% of stall speed.

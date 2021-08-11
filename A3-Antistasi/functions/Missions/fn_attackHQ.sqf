@@ -47,7 +47,7 @@ if (count _typesVeh > 0) then
 	sleep 30;
 	};
 _typesVeh = (_faction get "vehiclesHelisLight") + (_faction get "vehiclesHelisTransport");
-if (_typesVeh isEqualTo []) then {_typesVeh = _faction get "vehiclesPlanesTransport"};
+if (_typesVeh isEqualTo ["not_supported","not_supported"]) then {_typesVeh = _faction get "vehiclesPlanesTransport"};
 _typeGroup = _groupData get "specOps";
 
 for "_i" from 0 to (round random 2) do
