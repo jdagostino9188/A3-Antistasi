@@ -2,7 +2,8 @@
 // _recruitType param allows some variation based on recruiting method: 0 recruit, 1 HC squad, 2 garrison
 
 params ["_unit", "_recruitType"];
-private _filename = "fn_equipRebel";
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
 
 // Mostly exists because BIS_fnc_addWeapon won't use backpack space properly with AT launchers
 private _addWeaponAndMags = {
@@ -18,21 +19,11 @@ private _addWeaponAndMags = {
 	_unit addMagazines [_magazine, _magCount-1];
 };
 
-
-// Clear everything except standard items and empty uniform
-// Actually fast, unlike a setUnitLoadout with a full loadout
-_unit setUnitLoadout [ [], [], [],    [uniform _unit, []], [], [],    "", "", [],
-	["ItemMap","","","ItemCompass","ItemWatch",""] ];		// no GPS, radio, NVG
-if (haveRadio) then {_unit linkItem "ItemRadio"};
-
-// Removed for the moment because I'm not sure what the intentions are for rebel uniforms
-// forceadd required for greenfor vanilla because allRebelUniforms has the blufor guerilla uniforms
-//_unit forceAddUniform (if (!activeGREF) then { selectRandom allRebelUniforms } else { uniform _unit });
-
+if (haveRadio) then {_unit linkItem selectrandom (unlockedRadios)};
 
 // Chance of picking armored rather than random vests and headgear, rising with unlocked gear counts
 if !(unlockedHeadgear isEqualTo []) then {
-	if (count unlockedArmoredHeadgear * 20 < random(100)) then { _unit addHeadgear (selectRandom unlockedHeadgear) }
+	if (count unlockedArmoredHeadgear * 20 < random(100)) then { _unit addHeadgear (selectRandom (A3A_faction_reb get "headgear")) }
 	else { _unit addHeadgear (selectRandom unlockedArmoredHeadgear) };
 };
 if !(unlockedVests isEqualTo []) then {
@@ -41,18 +32,16 @@ if !(unlockedVests isEqualTo []) then {
 };
 if !(unlockedBackpacksCargo isEqualTo []) then { _unit addBackpack (selectRandom unlockedBackpacksCargo) };
 
-_unit addItemToUniform "FirstAidKit";
-_unit addItemToUniform "FirstAidKit";
-
 // this should be improved by categorising grenades properly
 private _unlockedSmokes = allSmokeGrenades arrayIntersect unlockedMagazines;
 if !(_unlockedSmokes isEqualTo []) then { _unit addMagazines [selectRandom _unlockedSmokes, 2] };
 
 
-private _unitClass = typeOf _unit;
-
+private _unitClass = _unit getVariable "unitType";
+private _groupData = FactionGet(reb,"groups");
+#define GROUP(VAR) (_groupData get VAR)
 switch (true) do {
-	case (_unitClass in SDKSniper): {
+	case (_unitClass in GROUP("Sniper")): {
 		if (count unlockedSniperRifles > 0) then {
 			[_unit, selectRandom unlockedSniperRifles, 8] call _addWeaponAndMags;
 			if (count unlockedOptics > 0) then {
@@ -64,65 +53,73 @@ switch (true) do {
 			[_unit,unlockedRifles] call A3A_fnc_randomRifle;
 		};
 	};
-	case (_unitClass in SDKMil): {
+	case (_unitClass isEqualTo GROUP("Mil")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
 		// Adding AA launchers to garrison riflemen because explosives guys can't currently be purchased there
 		if (_recruitType == 2 && {count unlockedAA > 0}) then {
 			[_unit, selectRandom unlockedAA, 1] call _addWeaponAndMags;
 		};
 	};
-	case (_unitClass in SDKMG): {
+	case (_unitClass isEqualTo GROUP("MG")): {
 		[_unit,unlockedMachineGuns] call A3A_fnc_randomRifle;
 	};
-	case (_unitClass in SDKGL): {
+	case (_unitClass isEqualTo GROUP("GL")): {
 		[_unit,unlockedGrenadeLaunchers] call A3A_fnc_randomRifle;
 	};
-	case (_unitClass in SDKExp): {
+	case (_unitClass isEqualTo GROUP("Exp")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
-		_unit setUnitTrait ["explosiveSpecialist",true];
-		_unit addItemToBackpack "Toolkit";
+		_unit enableAIFeature ["MINEDETECTION", true]; //This should prevent them from Stepping on the Mines as an "Expert" (It helps, they still step on them)
 		if (count unlockedAA > 0) then {
 			[_unit, selectRandom unlockedAA, 1] call _addWeaponAndMags;
 		};
+			_unit addItemToBackpack (selectRandom unlockedToolkits);
+			_unit addItemToBackpack (selectRandom unlockedMineDetectors);
 		// TODO: explosives. Not that they know what to do with them.
 	};
-	case (_unitClass in SDKEng): {
+	case (_unitClass isEqualTo GROUP("Eng")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
-		_unit setUnitTrait ["engineer",true];
-		_unit addItemToBackpack "Toolkit";
+		_unit addItemToBackpack (selectRandom unlockedToolkits);
 	};
-	case (_unitClass in SDKMedic): {
+	case (_unitClass isEqualTo GROUP("Medic")): {
 		[_unit,unlockedSMGs] call A3A_fnc_randomRifle;
-		_unit setUnitTrait ["medic",true];
-		_unit addItemToBackpack "Medikit";
-		for "_i" from 1 to 10 do {_unit addItemToBackpack "FirstAidKit"};
+		// temporary hack
+		private _medItems = [];
+		{
+			for "_i" from 1 to (_x#1) do { _medItems pushBack (_x#0) };
+		} forEach (["MEDIC",independent] call A3A_fnc_itemset_medicalSupplies);
+		{
+			_medItems deleteAt (_medItems find _x);
+		} forEach items _unit;
+		{
+			_unit addItemToBackpack _x;
+		} forEach _medItems;
 	};
-	case (_unitClass in SDKATman): {
+	case (_unitClass in GROUP("LAT")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
 		if !(unlockedAT isEqualTo []) then {
 			[_unit, selectRandom unlockedAT, 4] call _addWeaponAndMags;
 		} else {
-			if (hasIFA) then {
+			if (A3A_hasIFA) then {
 				[_unit, "LIB_PTRD", 10] call _addWeaponAndMags;
 			};
 		};
 	};
 	// squad leaders and
-	case (_unitClass in squadLeaders): {
+	case (_unitClass in GROUP("SL")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
-		if (_recruitType == 1) then {_unit linkItem "ItemRadio"};
+		if (_recruitType == 1) then {_unit linkItem selectrandom (unlockedRadios)};
 	};
- 	case (_unitClass isEqualTo staticCrewTeamPlayer): {
+ 	case (_unitClass isEqualTo GROUP("staticCrew")): {
 		[_unit,unlockedRifles] call A3A_fnc_randomRifle;
-		if (_recruitType == 1) then {_unit linkItem "ItemRadio"};
+		if (_recruitType == 1) then {_unit linkItem selectrandom (unlockedRadios)};
 	};
 	default {
 		[_unit,unlockedSMGs] call A3A_fnc_randomRifle;
-		[1, format["Unknown unit class: %1", _unitClass], _filename] call A3A_fnc_log;
+        Error_1("Unknown unit class: %1", _unitClass);
 	};
 };
 
-if (!hasIFA && sunOrMoon < 1) then {
+if (!A3A_hasIFA && sunOrMoon < 1) then {
 	if !(haveNV) then {
 		// horrible, although at least it stops once you unlock NV
 		private _flashlights = allLightAttachments arrayIntersect unlockedItems;
@@ -157,4 +154,4 @@ if (!hasIFA && sunOrMoon < 1) then {
 // remove backpack if empty, otherwise squad troops will throw it on the ground
 if (backpackItems _unit isEqualTo []) then { removeBackpack _unit };
 
-[4, format["Class %1, type %2, loadout %3", _unitClass, _recruitType, str (getUnitLoadout _unit)], _filename] call A3A_fnc_log;
+Verbose_3("Class %1, type %2, loadout %3", _unitClass, _recruitType, str (getUnitLoadout _unit));

@@ -46,6 +46,7 @@ private _categoryOverrideTable = [
 ["UK3CB_SVD_OLD", ["SniperRifles","Weapons"]],
 ["UK3CB_M16A1_LSW", ["MachineGuns","Weapons"]],
 
+["UK3CB_BAF_Javelin_Launcher", ["MissileLaunchers","Weapons","AT"]],
 ["UK3CB_BAF_Javelin_CLU", ["Binoculars","Items"]],
 ["UK3CB_BAF_Javelin_Slung_Tube", ["MissileLaunchers","Weapons","AT"]],
 ["UK3CB_M79", ["GrenadeLaunchers","Weapons"]],
@@ -53,6 +54,7 @@ private _categoryOverrideTable = [
 ["UK3CB_BAF_AT4_CS_AP_Launcher", ["RocketLaunchers","Weapons","AT"]],
 
 ["launch_NLAW_F", ["MissileLaunchers","Weapons","AT"]],
+["hgun_PDW2000_F", ["SMGs","Weapons"]],
 
 ["UK3CB_BAF_L86A2", ["MachineGuns","Weapons"]],
 ["UK3CB_BAF_L86A3", ["MachineGuns","Weapons"]],
@@ -81,6 +83,7 @@ private _categoryOverrideTable = [
 ["ace_csw_staticHMGCarry", ["StaticWeaponParts","Items"]],
 ["ace_csw_staticGMGCarry", ["StaticWeaponParts","Items"]],
 ["ace_csw_staticMortarCarry", ["StaticWeaponParts","Items"]],
+["ace_csw_staticM2ShieldCarry", ["StaticWeaponParts","Items"]],
 
 ["ace_compat_rhs_afrf3_2b14_carry", ["StaticWeaponParts","Items"]],
 ["ace_compat_rhs_afrf3_nsv_carry" , ["StaticWeaponParts","Items"]],
@@ -99,9 +102,59 @@ private _categoryOverrideTable = [
 ["ace_dragon_super", ["MissileLaunchers","Weapons","AT"]],
 ["ace_dragon_sight", ["Binoculars","Items"]],
 
+["ACE_Kestrel4500", ["Gadgets","Items"]],
+["ACE_ATragMX", ["Gadgets","Items"]],
+["ACE_HuntIR_monitor", ["Gadgets","Items"]],
+["ACE_microDAGR", ["Gadgets","Items"]],
+["ACE_DAGR", ["Gadgets","Items"]],
+
 ["LIB_PTRD", ["Unknown", "Weapons"]],
 ["LIB_M2_Flamethrower", ["Unknown", "Weapons"]],			// don't want these two being chosen randomly by AIs
 ["LIB_Bagpipes", ["Unknown","Weapons"]],					// wat
+["ACE_SatchelCharge_Remote_Mag_Throwable", ["Unknown", "Explosives", "Items"]],
+["ACE_DemoCharge_Remote_Mag_Throwable", ["Unknown", "Explosives", "Items"]],
+//Flashlights
+["vn_mx991", ["Unknown","Weapons"]],
+["vn_mx991_red", ["Unknown","Weapons"]],
+["vn_fkb1_red", ["Unknown","Weapons"]],
+["vn_fkb1", ["Unknown","Weapons"]],
+["ACE_Flashlight_Maglite_ML300L", ["Unknown","Weapons"]],
+
+["vn_default_helmetbase_09", ["Unknown","Headgear"]],	//Goat Hat
+["vn_m1897", ["Shotguns","Weapons"]],
+["vn_izh54", ["Shotguns","Weapons"]],
+["vn_izh54_shorty", ["Shotguns","Weapons"]],
+["vn_pps52", ["SMGs","Weapons"]],
+["vn_pps43", ["SMGs","Weapons"]],
+["vn_mc10", ["SMGs","Weapons"]],
+["vn_ppsh41", ["SMGs","Weapons"]],
+["vn_k50m", ["SMGs","Weapons"]],
+["vn_mat49", ["SMGs","Weapons"]],
+["vn_mat49_f", ["SMGs","Weapons"]],
+["vn_mat49_vc", ["SMGs","Weapons"]],
+["vn_m3a1", ["SMGs","Weapons"]],
+["vn_sten", ["SMGs","Weapons"]],
+["vn_m79", ["GrenadeLaunchers","Weapons"]],
+["vn_sa7b", ["MissileLaunchers","Weapons"]],
+["vn_sa7", ["MissileLaunchers","Weapons"]],
+["vn_m4956_gl", ["GrenadeLaunchers","Weapons"]],
+["vn_m2carbine_gl", ["GrenadeLaunchers","Weapons"]],
+["vn_m1carbine_gl", ["GrenadeLaunchers","Weapons"]],
+["vn_sks_gl", ["GrenadeLaunchers","Weapons"]],
+["vn_type56", ["Rifles","Weapons"]],
+
+//ACRE Radios
+//Using Gadgets instead of Radios to prevent future issues as they don't use the Radio Slot
+["ACRE_PRC148", ["Gadgets","items"]],
+["ACRE_PRC152", ["Gadgets","items"]],
+["ACRE_PRC343", ["Gadgets","items"]],
+["ACRE_PRC77", ["Gadgets","items"]],
+["ACRE_SEM52SL", ["Gadgets","items"]],
+["ACRE_SEM70", ["Gadgets","items"]],
+["ACRE_VHF30108SPIKE", ["Gadgets","items"]],
+["ACRE_VHF30108", ["Gadgets","items"]],
+["ACRE_VHF30108MAST", ["Gadgets","items"]],
+["ACRE_PRC117F", ["Gadgets","items"]],
 
 ["LIB_M2_Tripod", ["StaticWeaponParts","Items"]],
 ["LIB_Laffete_Tripod", ["StaticWeaponParts","Items"]],
@@ -114,22 +167,8 @@ private _categoryOverrideTable = [
 ["LIB_M2_60_Tripod", ["StaticWeaponParts","Items"]],
 ["LIB_M2_60_Barrel", ["StaticWeaponParts","Items"]]   ];
 
-/* Not sure if these are a problem
-["LIB_GER_Headset",["NVGs","Items"]],
-["LIB_Headwrap",["NVGs","Items"]],
-["LIB_Headwrap_gloves",["NVGs","Items"]],
-["LIB_Mohawk",["NVGs","Items"]],
-["LIB_GER_Gloves1",["NVGs","Items"]],
-["LIB_GER_Gloves2",["NVGs","Items"]],
-["LIB_GER_Gloves3",["NVGs","Items"]],
-["LIB_GER_Gloves4",["NVGs","Items"]],
-["LIB_GER_Gloves5",["NVGs","Items"]],
-*/
-
 //Create a local namespace. Should only run on the server.
 categoryOverrides = false call A3A_fnc_createNamespace;
 {
 	categoryOverrides setVariable [_x select 0, _x select 1];
 } forEach _categoryOverrideTable;
-
-

@@ -1,19 +1,22 @@
-diag_log format ["%1: [Antistasi] | INFO | loadServer Starting.",servertime];
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
+Info("loadServer Starting.");
 if (isServer) then {
-	diag_log format ["%1: [Antistasi] | INFO | Starting Persistent Load.",servertime];
+    Info("Starting Persistent Load.");
 	petros allowdamage false;
 
+	A3A_saveVersion = 0;
+	["version"] call A3A_fnc_getStatVariable;
+	["savedPlayers"] call A3A_fnc_getStatVariable;
 	["outpostsFIA"] call A3A_fnc_getStatVariable; publicVariable "outpostsFIA";
 	["mrkSDK"] call A3A_fnc_getStatVariable;
 	["mrkCSAT"] call A3A_fnc_getStatVariable;
-	["difficultyX"] call A3A_fnc_getStatVariable;
-	["gameMode"] call A3A_fnc_getStatVariable;
 	["destroyedSites"] call A3A_fnc_getStatVariable;
 	["minesX"] call A3A_fnc_getStatVariable;
-	["countCA"] call A3A_fnc_getStatVariable;
+	["attackCountdownOccupants"] call A3A_fnc_getStatVariable;
+    ["attackCountdownInvaders"] call A3A_fnc_getStatVariable;
+    ["countCA"] call A3A_fnc_getStatVariable;
 	["antennas"] call A3A_fnc_getStatVariable;
-	["prestigeNATO"] call A3A_fnc_getStatVariable;
-	["prestigeCSAT"] call A3A_fnc_getStatVariable;
 	["hr"] call A3A_fnc_getStatVariable;
 	["dateX"] call A3A_fnc_getStatVariable;
 	["weather"] call A3A_fnc_getStatVariable;
@@ -23,11 +26,9 @@ if (isServer) then {
 	["garrison"] call A3A_fnc_getStatVariable;
 	["usesWurzelGarrison"] call A3A_fnc_getStatVariable;
 	["skillFIA"] call A3A_fnc_getStatVariable;
-	["distanceSPWN"] call A3A_fnc_getStatVariable;
-	["civPerc"] call A3A_fnc_getStatVariable;
-	["maxUnits"] call A3A_fnc_getStatVariable;
 	["membersX"] call A3A_fnc_getStatVariable;
 	["vehInGarage"] call A3A_fnc_getStatVariable;
+    ["HR_Garage"] call A3A_fnc_getStatVariable;
 	["destroyedBuildings"] call A3A_fnc_getStatVariable;
 	["idlebases"] call A3A_fnc_getStatVariable;
 	["idleassets"] call A3A_fnc_getStatVariable;
@@ -88,14 +89,20 @@ if (isServer) then {
 		};
 	} forEach citiesX;
 
+    //Load aggro stacks and level and calculate current level
+    ["aggressionOccupants"] call A3A_fnc_getStatVariable;
+	["aggressionInvaders"] call A3A_fnc_getStatVariable;
+    [true] call A3A_fnc_calculateAggression;
+
 	["chopForest"] call A3A_fnc_getStatVariable;
-	["destroyedBuildings"] call A3A_fnc_getStatVariable;
+
 	/*
 	{
 	_buildings = nearestObjects [_x, listMilBld, 25, true];
 	(_buildings select 1) setDamage 1;
 	} forEach destroyedBuildings;
 	*/
+
 	["posHQ"] call A3A_fnc_getStatVariable;
 	["nextTick"] call A3A_fnc_getStatVariable;
 	["staticsX"] call A3A_fnc_getStatVariable;
@@ -118,7 +125,7 @@ if (isServer) then {
 
 	if (isNil "usesWurzelGarrison") then {
 		//Create the garrison new
-		diag_log "No WurzelGarrison found, creating new!";
+        Info("No WurzelGarrison found, creating new!");
 		[airportsX, "Airport", [0,0,0]] spawn A3A_fnc_createGarrison;	//New system
 		[resourcesX, "Other", [0,0,0]] spawn A3A_fnc_createGarrison;	//New system
 		[factories, "Other", [0,0,0]] spawn A3A_fnc_createGarrison;
@@ -127,9 +134,12 @@ if (isServer) then {
 
 	} else {
 		//Garrison save in wurzelformat, load it
-		diag_log "WurzelGarrison found, loading it!";
+        Info("WurzelGarrison found, loading it!");
 		["wurzelGarrison"] call A3A_fnc_getStatVariable;
 	};
+
+    //Load state of testing timer
+    ["testingTimerIsActive"] call A3A_fnc_getStatVariable;
 
 	clearMagazineCargoGlobal boxX;
 	clearWeaponCargoGlobal boxX;
@@ -137,8 +147,8 @@ if (isServer) then {
 	clearBackpackCargoGlobal boxX;
 
 	[] remoteExec ["A3A_fnc_statistics",[teamPlayer,civilian]];
-	diag_log format ["%1: [Antistasi] | INFO | Persistent Load Completed.",servertime];
-	diag_log format ["%1: [Antistasi] | INFO | Generating Map Markers.",servertime];
+    Info("Persistent Load Completed.");
+    Info("Generating Map Markers.");
 	["tasks"] call A3A_fnc_getStatVariable;
 	if !(isMultiplayer) then {
 		{//Can't we go around this using the initMarker? And only switching marker?
@@ -202,4 +212,4 @@ if (isServer) then {
 	placementDone = true; publicVariable "placementDone";
 	petros allowdamage true;
 };
-diag_log format ["%1: [Antistasi] | INFO | loadServer Completed.",servertime];
+Info("loadServer Completed.");

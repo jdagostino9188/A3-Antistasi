@@ -1,7 +1,10 @@
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
+private _groupData = FactionGet(reb,"groups");
 private ["_typeX","_costs","_groupX","_unit","_radiusX","_roads","_road","_pos","_truckX","_textX","_mrk","_hr","_exists","_positionTel","_isRoad","_typeGroup","_resourcesFIA","_hrFIA"];
 
-if (["outpostsFIA"] call BIS_fnc_taskExists) exitWith {["Outposts/Roadblocks", "We can only deploy / delete one Observation Post or Roadblock at a time."] call A3A_fnc_customHint;};
-if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hasIFA) then {["Radio Required", "You need a radio in your inventory to be able to give orders to other squads"] call A3A_fnc_customHint;} else {["Radio-man Required", "You need a Radio Man in your group to be able to give orders to other squads"] call A3A_fnc_customHint;}};
+if ("outpostsFIA" in A3A_activeTasks) exitWith {["Outposts/Roadblocks", "We can only deploy / delete one Observation Post or Roadblock at a time."] call A3A_fnc_customHint;};
+if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(A3A_hasIFA) then {["Radio Required", "You need a radio in your inventory to be able to give orders to other squads"] call A3A_fnc_customHint;} else {["Radio-man Required", "You need a Radio Man in your group to be able to give orders to other squads"] call A3A_fnc_customHint;}};
 
 _typeX = _this select 0;
 
@@ -29,18 +32,18 @@ if (_typeX != "delete") then
 	{
 	_isRoad = isOnRoad _positionTel;
 
-	_typeGroup = groupsSDKSniper;
+	_typeGroup = _groupData get "groupsSnipers";
 
 	if (_isRoad) then
 		{
-		_typeGroup = groupsSDKAT;
-		_costs = _costs + ([vehSDKLightArmed] call A3A_fnc_vehiclePrice) + (server getVariable staticCrewTeamPlayer);
+		_typeGroup = _groupData get "AT";
+		_costs = _costs + ([FactionGet(reb,"vehicleLightArmed")] call A3A_fnc_vehiclePrice) + (server getVariable (_groupData get "staticCrew"));
 		_hr = _hr + 1;
 		};
 
 	//_formatX = (configfile >> "CfgGroups" >> "teamPlayer" >> "Guerilla" >> "Infantry" >> _typeGroup);
 	//_unitsX = [_formatX] call groupComposition;
-	{_costs = _costs + (server getVariable (_x select 0)); _hr = _hr +1} forEach _typeGroup;
+	{_costs = _costs + (server getVariable _x); _hr = _hr +1} forEach _typeGroup;
 	}
 else
 	{

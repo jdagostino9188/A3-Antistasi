@@ -1,3 +1,5 @@
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
 params ["_unit", "_injurer"];
 
 private _bleedOutTime = if (surfaceIsWater (position _unit)) then {time + 60} else {time + 300};
@@ -41,7 +43,7 @@ _unit stop false;
 if (_playerNear) then
 {
 	[_unit,"remove"] remoteExec ["A3A_fnc_flagaction",0,_unit];
-    if((typeOf _unit) in squadLeaders) then
+    if((_unit getVariable "unitType") in FactionGet(all,"SquadLeaders")) then
     {
         _unit spawn
         {
@@ -61,17 +63,6 @@ if (time >= _bleedOutTime) exitWith
 			[1,_injurer] call A3A_fnc_playerScoreAdd;
 		};
 		[-1,1,getPos _unit] remoteExec ["A3A_fnc_citySupportChange",2];
-		switch (_side) do
-		{
-			case Occupants:
-			{
-				[0.1,0] remoteExec ["A3A_fnc_prestige",2];
-			};
-			case Invaders:
-			{
-				[0,0.25] remoteExec ["A3A_fnc_prestige",2];
-			};
-		};
 	};
     _unit setDamage 1;
 };
@@ -82,16 +73,13 @@ if (alive _unit) then
 	_unit playMoveNow "AmovPpneMstpSnonWnonDnon_healed";
 	_unit setVariable ["overallDamage",damage _unit];
 
-	if (!(_unit getVariable ["surrendered",false])) then
-	{
-		if (captive _unit) then
-		{
-			[_unit,false] remoteExec ["setCaptive",0,_unit];
-			_unit setCaptive false;
-		};
-	}
-	else
-	{
+	if (_unit getVariable ["surrendering", false]) exitWith {
+		_unit setVariable ["surrendering", nil, true];
 		[_unit] spawn A3A_fnc_surrenderAction;
+	};
+
+	if (!(_unit getVariable ["surrendered", false]) and captive _unit) then {
+		[_unit,false] remoteExec ["setCaptive",0,_unit];
+		_unit setCaptive false;
 	};
 };

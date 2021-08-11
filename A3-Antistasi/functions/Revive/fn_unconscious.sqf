@@ -50,7 +50,7 @@ else
 		{
 		[_unit,"heal1"] remoteExec ["A3A_fnc_flagaction",0,_unit];
 		//[_unit,"carry"] remoteExec ["A3A_fnc_flagaction",0,_unit];
-		//_unit call jn_fnc_logistics_addAction;
+		//_unit call A3A_fnc_logistics_addLoadAction;
 		if (_injurer != Invaders) then {[_unit,true] remoteExec ["setCaptive",0,_unit]; _unit setCaptive true};
 		}
 	else
@@ -68,13 +68,13 @@ _unit setFatigue 1;
 sleep 2;
 if (_isPlayer) then
 	{
-	if (hasTFAR) then
+	if (A3A_hasTFAR || A3A_hasTFARBeta) then
 		{
-		_saveVolume = player getVariable ["tf_globalVolume", 1.0];
-		player setVariable ["tf_unable_to_use_radio", true, true];
-		player setVariable ["tf_globalVolume", 0];
 		_saveVolumeVoice = player getVariable ["tf_voiceVolume", 1.0];
-		if (random 100 < 20) then {player setVariable ["tf_voiceVolume", 0.0, true]};
+		player setVariable ["tf_unable_to_use_radio", true, true];
+		player setVariable ["tf_voiceVolume", 0];
+		_saveVolume = player getVariable ["tf_globalVolume", 1.0];
+		player setVariable ["tf_globalVolume", 0.7, true];
 		};
 	group _unit setCombatMode "YELLOW";
 	if (isMultiplayer) then
@@ -140,7 +140,7 @@ while {(time < _bleedOut) and (_unit getVariable ["incapacitated",false]) and (a
 if (_isPlayer) then
 	{
 	(findDisplay 46) displayRemoveEventHandler ["KeyDown", respawnMenu];
-	if (hasTFAR) then
+	if (A3A_hasTFAR || A3A_hasTFARBeta) then
 		{
 		player setVariable ["tf_unable_to_use_radio", false, true];
 		player setVariable ["tf_globalVolume", _saveVolume];

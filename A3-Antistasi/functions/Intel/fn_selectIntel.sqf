@@ -1,7 +1,7 @@
 //Define results for small intel
 #define TROOPS          100
 #define TIME_LEFT       101
-#define ACCESS_CAR      102
+#define DECRYPTION_KEY  102
 #define CONVOY          103
 
 //Define results for medium intel
@@ -26,32 +26,25 @@ params ["_intelType", "_side"];
 *   Returns:
 *       _text : STRING : The text of the selected intel
 */
-
-private _fileName = "selectIntel";
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
 if(isNil "_intelType") exitWith
 {
-    [1, "No intel type given!", _fileName] call A3A_fnc_log;
+    Error("No intel type given!");
 };
 if(isNil "_side") exitWith
 {
-    [1, "No side given!", _fileName] call A3A_fnc_log;
+    Error("No side given!");
 };
 
+private _faction = Faction(_side);
 private _text = "";
-private _sideName = "";
+private _sideName = _faction get "name";
 private _intelContent = "";
-if(_side == Occupants) then
-{
-    _sideName = nameOccupants
-}
-else
-{
-    _sideName = nameInvaders
-};
 
 if(_intelType == "Small") then
 {
-    _intelContent = selectRandomWeighted [TROOPS, 0, TIME_LEFT, 0.3, ACCESS_CAR, 0.35, CONVOY, 0.35];
+    _intelContent = selectRandomWeighted [TROOPS, 0, TIME_LEFT, 0.3, DECRYPTION_KEY, 0.35, CONVOY, 0.35];
     switch (_intelContent) do
     {
         case (TROOPS):
@@ -61,19 +54,37 @@ if(_intelType == "Small") then
         };
         case (TIME_LEFT):
         {
-            private _nextAttack = countCA + (random 600) - 300;
-            if(_nextAttack < 300) then
+            private _nextAttack = 0;
+            if(_side == Occupants) then
             {
-                _text = format ["Next enemy attack is imminent!"];
+                _nextAttack = attackCountdownOccupants + (random 600) - 300;
             }
             else
             {
-                _text = format ["Next enemy attack expected in %1 minutes", round (_nextAttack / 60)];
+                _nextAttack = attackCountdownInvaders + (random 600) - 300;
+            };
+            if(_nextAttack < 300) then
+            {
+                _text = format ["%1 attack is imminent!", _sideName];
+            }
+            else
+            {
+                _text = format ["%1 attack expected in %2 minutes", _sideName, round (_nextAttack / 60)];
             };
         };
-        case (ACCESS_CAR):
+        case (DECRYPTION_KEY):
         {
-            _text = format ["%1 currently has access to<br/>%2", _sideName, ([_side, ACCESS_CAR] call A3A_fnc_getVehicleIntel)];
+            if(_side == Occupants) then
+            {
+                occupantsRadioKeys = occupantsRadioKeys + 1;
+                publicVariable "occupantsRadioKeys";
+            }
+            else
+            {
+                invaderRadioKeys = invaderRadioKeys + 1;
+                publicVariable "invaderRadioKeys";
+            };
+            _text = format ["You found a %1 decryption key!<br/>It allows your faction to fully decrypt the next support call.", _sideName];
         };
         case (CONVOY):
         {
@@ -141,7 +152,7 @@ if(_intelType == "Medium") then
 };
 if(_intelType == "Large") then
 {
-    if(["AS"] call BIS_fnc_taskExists) then
+    if("AS" in A3A_activeTasks) then
     {
         _intelContent = selectRandomWeighted [TRAITOR, 0.3, WEAPON, 0.3, MONEY, 0.4];
     }

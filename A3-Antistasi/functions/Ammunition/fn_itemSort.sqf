@@ -1,10 +1,10 @@
-diveGear append ["V_RebreatherIA","G_Diving"];
-if (side (group petros) == west) then {
-	diveGear pushBack "U_B_Wetsuit"
-} else {
-	diveGear pushBack "U_I_Wetsuit"
+if (A3A_faction_reb get "addDiveGear") then {
+	diveGear append ["U_I_Wetsuit","V_RebreatherIA","G_Diving"];
 };
 
+if (A3A_faction_reb get "addFlightGear") then {
+	flyGear pushBack "U_I_pilotCoveralls"
+};
 //Lights Vs Laser ID
 {
 if (isClass(configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "FlashLight" >> "Attenuation")) then

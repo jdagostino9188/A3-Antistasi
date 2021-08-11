@@ -1,3 +1,32 @@
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
+// convert killzones into [base, target] array
+private _allKillzones = [];
+{
+	private _base = _x;
+	private _kzlist = killZones getVariable [_base, []];
+	{ _allKillzones pushBack [_base, _x] } forEach _kzlist;
+} forEach (outposts + airportsX);
+
+// Remove random killzones if the aggression-based accumulator hits >1
+if (isNil "killZoneRemove") then {killZoneRemove = 0};
+private _kzAggroMult = 0.2 + 0.4 * (aggressionOccupants + aggressionInvaders) / 100;
+killZoneRemove = killZoneRemove + _kzAggroMult * (0.5 + 0.1 * count _allKillzones);
+if (count _allKillzones == 0) then { killZoneRemove = 0 };
+
+while {killZoneRemove >= 1} do
+{
+	// Remove a random killzone entry from the real killzones.
+	// May attempt to remove the same killzone multiple times. This is safe.
+	(selectRandom _allKillzones) params ["_base", "_target"];
+	private _kzlist = killZones getVariable [_base, []];
+	_kzlist deleteAt (_kzlist find _target);
+	killZones setVariable [_base, _kzlist, true];
+	killZoneRemove = killZoneRemove - 1;
+};
+
+// Handle the old reinforcements
+
 private ["_airportsX","_reinfPlaces","_airportX","_numberX","_numGarr","_numReal","_sideX","_potentials","_countX","_siteX","_positionX"];
 _airportsX = airportsX select {(sidesX getVariable [_x,sideUnknown] != teamPlayer) and (spawner getVariable _x == 2)};
 if (count _airportsX == 0) exitWith {};
@@ -8,25 +37,20 @@ _reinfPlaces = [];
 	_numGarr = [_airportX] call A3A_fnc_garrisonSize;
 	_numReal = count (garrison getVariable [_airportX, []]);
 	_sideX = sidesX getVariable [_airportX,sideUnknown];
+    private _groupData = FactionGetGroups(_sideX);
 
 	//Self reinforce the airport if needed
 	if (_numReal + 4 <= _numGarr) then
 	{
-		if (_numReal + 8 <= _numGarr) then
-		{
-			if (_sideX == Occupants) then {[selectRandom groupsNATOSquad,_sideX,_airportX,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom groupsCSATSquad,_sideX,_airportX,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
-			_numberX = 0;
-		}
-		else
-		{
-			if (_sideX == Occupants) then {[selectRandom groupsNATOmid,_sideX,_airportX,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom groupsCSATmid,_sideX,_airportX,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
-			_numberX = 4;
-		};
+        [
+            selectRandom (_groupData get (if (_numReal + 8 <= _numGarr) then {_numberX = 0; "squads"} else {_numberX = 4; "medium"}))
+            ,_sideX,_airportX,0
+        ] remoteExec ["A3A_fnc_garrisonUpdate",2];
 	};
 	//Self reinforce done
 
 	//Reinforce nearby sides
-	if ((_numberX >= 4) and (reinfPatrols <= 4)) then
+	if (_numberX >= 4) then
 	{
 		_potentials = (outposts + seaports - _reinfPlaces - (killZones getVariable [_airportX,[]])) select {sidesX getVariable [_x,sideUnknown] == _sideX};
 		if (_potentials isEqualTo []) then
@@ -54,7 +78,7 @@ _reinfPlaces = [];
 				{
 					if ({(_x distance2D _positionX < (2*distanceSPWN)) or (_x distance2D (getMarkerPos _siteX) < (2*distanceSPWN))} count allPlayers == 0) then
 					{
-						_typeGroup = if (_sideX == Occupants) then {if (_numberX == 4) then {selectRandom groupsNATOmid} else {selectRandom groupsNATOSquad}} else {if (_numberX == 4) then {selectRandom groupsCSATmid} else {selectRandom groupsCSATSquad}};
+                        _typeGroup = selectRandom (_groupData get (if (_numberX == 4) then {"medium"} else {"squads"}));
 						[_typeGroup,_sideX,_siteX,2] remoteExec ["A3A_fnc_garrisonUpdate",2];
 
 						//This line send a virtual convoy, execute [] execVM "Convoy\convoyDebug.sqf" as admin to see it
@@ -77,6 +101,18 @@ _reinfPlaces = [];
 if ((count _reinfPlaces == 0) and (AAFpatrols <= 3)) then {[] spawn A3A_fnc_AAFroadPatrol};
 
 
+// Reduce loot crate cooldown if garrison is complete
+{
+	call {
+		private _lootCD = garrison getVariable [_x + "_lootCD", 0];
+		if (_lootCD == 0) exitWith {};							// don't update unless changed
+		private _realSize = count (garrison getVariable [_x, []]);
+		if (_realSize < [_x] call A3A_fnc_garrisonSize) exitWith {};
+		garrison setVariable [_x + "_lootCD", 0 max (_lootCD - 10), true];
+	};
+} forEach (airportsX + outposts + seaports);
+
+
 {
 		//Setting the number of recruitable units per ticks per airport
     garrison setVariable [format ["%1_recruit", _x], 12, true];
@@ -92,7 +128,7 @@ if ((count _reinfPlaces == 0) and (AAFpatrols <= 3)) then {[] spawn A3A_fnc_AAFr
 	_side = _x;
   _reinfMarker = if(_x == Occupants) then {reinforceMarkerOccupants} else {reinforceMarkerInvader};
 	_canReinf = if(_x == Occupants) then {canReinforceOccupants} else {canReinforceInvader};
-  diag_log format ["Side %1, needed %2, possible %3", _x, count _reinfMarker, count _canReinf];
+    Debug_3("Side %1, needed %2, possible %3", _x, count _reinfMarker, count _canReinf);
 	_reinfMarker sort true;
 	{
 		_target = (_x select 1);

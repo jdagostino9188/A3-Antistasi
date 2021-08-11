@@ -1,3 +1,5 @@
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
 params ["_unit", "_player", "_actionID"];
 
 /*  The action of interrogating a surrendered unit.
@@ -23,11 +25,11 @@ private _chance = 0;
 private _side = side (group _unit);
 if (_side == Occupants) then
 {
-	_chance = 100 - prestigeNATO;
+	_chance = 100 - aggressionOccupants;
 }
 else
 {
-	_chance = 100 - prestigeCSAT;
+	_chance = 100 - aggressionInvaders;
 };
 
 _chance = _chance + 20;
@@ -36,7 +38,7 @@ sleep 5;
 
 if ((round (random 100)) < _chance) then
 {
-    if((typeOf _unit) in squadLeaders) then
+    if((_unit getVariable "unitType") in FactionGet(all,"SquadLeaders")) then
     {
         if(_unit getVariable ["hasIntel", false]) then
         {

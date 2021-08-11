@@ -1,4 +1,5 @@
 if (player != theBoss) exitWith {["Control Squad", "Only Commander has the ability to control HC units"] call A3A_fnc_customHint;};
+if (!isNil "A3A_FFPun_Jailed" && {(getPlayerUID player) in A3A_FFPun_Jailed}) exitWith {["Control Squad", "Nope. Not happening."] call A3A_fnc_customHint;};
 
 _groups = _this select 0;
 
@@ -34,6 +35,7 @@ _eh1 = player addEventHandler ["HandleDamage",
 	(units group player) joinsilent group player;
 	group player selectLeader player;
 	["Control Squad", "Returned to original Unit as it received damage"] call A3A_fnc_customHint;
+	nil;
 	}];
 _eh2 = _unit addEventHandler ["HandleDamage",
 	{
@@ -44,6 +46,7 @@ _eh2 = _unit addEventHandler ["HandleDamage",
 	(units group player) joinsilent group player;
 	group player selectLeader player;
 	["Control Squad", "Returned to original Unit as controlled AI received damage"] call A3A_fnc_customHint;
+	nil;
 	}];
 selectPlayer _unit;
 

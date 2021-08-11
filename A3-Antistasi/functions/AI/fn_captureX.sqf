@@ -9,35 +9,38 @@ if (!alive _unit) exitWith {};
 private _sideX = side (group _unit);
 private _interrogated = _unit getVariable ["interrogated", false];
 
-private _modAggroOcc = 0;
-private _modAggroInv = 0;
+private _modAggro = [0, 0];
 private _modHR = false;
 private _response = "";
-private _targetMarker = respawnOccupants;
+private _fleeSide = _sideX;
 
 if (_recruiting) then {
 	_playerX globalChat "How about joining the good guys?";
 
 	private _chance = 0;
-	if (_sideX == Occupants) then {
-		if (faction _unit == factionFIA) then { _chance = 60; _modAggroOcc = 0.1; }
-		else { _chance = 20; _modAggroOcc = 0.5; };
+	if (_sideX == Occupants) then
+    {
+		if ("militia_" in (_unit getVariable "unitType")) then { _chance = 60;}
+		else { _chance = 20;};
 	}
-	else {
-		if (faction _unit == factionFIA) then { _chance = 60; _modAggroInv = 0.1; }
-		else { _chance = 40; _modAggroInv = 0.5; };
+	else
+    {
+		if ("militia_" in (_unit getVariable "unitType")) then { _chance = 60;}
+		else { _chance = 40;};
 	};
 	if (_interrogated) then { _chance = _chance / 2 };
 
-	if (random 100 < _chance) then {
+	if (random 100 < _chance) then
+    {
+        _modAggro = [1, 30];
 		_response = "Why not? It can't be any worse.";
 		_modHR = true;
-		_targetMarker = respawnTeamPlayer;
+		_fleeSide = teamPlayer;
 	}
-	else {
+	else
+    {
 		_response =  "Screw you!";
-		_modAggroOcc = 0;
-		_modAggroInv = 0;
+		_modAggro = [0, 0];
 	};
 }
 else {
@@ -48,32 +51,22 @@ else {
 		"Thank you, I won't forget this!"
 	];
 
-	private _mult = if (_interrogated) then { 0.5 } else { 1.0 };
-	if (_sideX == Occupants) then {
-		if (faction _unit == factionFIA) then { _modAggroOcc = -0.3*_mult }
-		else { _modAggroOcc = -0.6*_mult };
-	}
-	else {
-		if (faction _unit == factionFIA) then { _modAggroInv = -0.05*_mult }
-		else { _modAggroInv = -0.1*_mult };
-	};
+    _modAggro = [-3, 30];
 };
 
 
-if (isMultiplayer) then {[_unit,true] remoteExec ["enableSimulationGlobal",2]} else {_unit enableSimulation true};
-sleep 3;
+sleep 2;
 _unit globalChat _response;
-_unit enableAI "ANIM";
-_unit enableAI "MOVE";
-_unit stop false;
-[_unit,""] remoteExec ["switchMove"];
-_unit doMove (getMarkerPos _targetMarker);
-// probably redundant. Should already be done in surrenderAction
-if (_unit getVariable ["spawner",false]) then {_unit setVariable ["spawner",nil,true]};
+
+[_unit, _fleeSide] remoteExec ["A3A_fnc_fleeToSide", _unit];
+
+private _group = group _unit;		// Group should be surrender-specific now
 sleep 100;
-if (alive _unit) then
+if (alive _unit && {!(_unit getVariable ["incapacitated", false])}) then
 {
-	[_modAggroOcc,_modAggroInv] remoteExec ["A3A_fnc_prestige",2];
+	([_sideX] + _modAggro) remoteExec ["A3A_fnc_addAggression",2];
 	if (_modHR) then { [1,0] remoteExec ["A3A_fnc_resourcesFIA",2] };
 };
+
 deleteVehicle _unit;
+deleteGroup _group;

@@ -9,46 +9,48 @@
 	"mrkSDK",
 	"prestigeNATO","prestigeCSAT", "hr","planesAAFcurrent","helisAAFcurrent","APCAAFcurrent","tanksAAFcurrent","armas","items","backpcks","ammunition","dateX", "WitemsPlayer","prestigeOPFOR","prestigeBLUFOR","resourcesAAF","resourcesFIA","skillFIA"];
 */
+#include "..\..\Includes\common.inc"
+FIX_LINE_NUMBERS()
+private _translateMarker = {
+	params ["_mrk"];
+	if (_mrk find "puesto" == 0) exitWith { "outpost" + (_mrk select [6]) };
+	if (_mrk find "puerto" == 0) exitWith { "seaport" + (_mrk select [6]) };
+	_mrk;
+};
 
-specialVarLoads = [
-	"outpostsFIA","minesX","staticsX","countCA","antennas","mrkNATO","mrkSDK","prestigeNATO",
+private _specialVarLoads = [
+	"outpostsFIA","minesX","staticsX","attackCountdownOccupants","antennas","mrkNATO","mrkSDK","prestigeNATO",
 	"prestigeCSAT","posHQ","hr","armas","items","backpcks","ammunition","dateX","prestigeOPFOR",
-	"prestigeBLUFOR","resourcesFIA","skillFIA","distanceSPWN","civPerc","maxUnits","destroyedSites",
+	"prestigeBLUFOR","resourcesFIA","skillFIA","destroyedSites",
 	"garrison","tasks","smallCAmrk","membersX","vehInGarage","destroyedBuildings","idlebases",
 	"idleassets","chopForest","weather","killZones","jna_dataList","controlsSDK","mrkCSAT","nextTick",
-	"bombRuns","difficultyX","gameMode","wurzelGarrison"
+	"bombRuns","wurzelGarrison","aggressionOccupants", "aggressionInvaders",
+	"countCA", "attackCountdownInvaders", "testingTimerIsActive", "version", "HR_Garage"
 ];
 
-_varName = _this select 0;
-_varValue = _this select 1;
+private _varName = _this select 0;
+private _varValue = _this select 1;
 if (isNil '_varValue') exitWith {};
-if (_varName in specialVarLoads) then {
-	if (_varName == 'countCA') then {countCA = _varValue; publicVariable "countCA"};
-	if (_varName == 'difficultyX') then {
-		if !(isMultiplayer) then {
-			skillMult = _varValue;
-			if (skillMult == 1) then {minWeaps = 15};
-			if (skillMult == 3) then {minWeaps = 40};
+
+if (_varName in _specialVarLoads) then {
+	if (_varName == 'version') then {
+		_s = _varValue splitString ".";
+		if (count _s < 2) exitWith {
+			Error_1("Bad version string: %1", _varValue);
 		};
+		A3A_saveVersion = 10000*parsenumber(_s#0) + 100*parseNumber(_s#1) + parseNumber(_s#2);
 	};
-	if(_varName == 'gameMode') then {
-		if !(isMultiplayer) then {
-			gameMode = _varValue;
-			if (gameMode != 1) then {
-				Occupants setFriend [Invaders,1];
-				Invaders setFriend [Occupants,1];
-				if (gameMode == 3) then {"CSAT_carrier" setMarkerAlpha 0};
-				if (gameMode == 4) then {"NATO_carrier" setMarkerAlpha 0};
-			};
-		};
-	};
+	if (_varName == 'attackCountdownOccupants') then {attackCountdownOccupants = _varValue; publicVariable "attackCountdownOccupants"};
+	if (_varName == 'attackCountdownInvaders') then {attackCountdownInvaders = _varValue; publicVariable "attackCountdownInvaders"};
+	//Keep this for backwards compatiblity
+	if (_varName == 'countCA') then {attackCountdownOccupants = _varValue; publicVariable "attackCountdownOccupants"};
 	if (_varName == 'bombRuns') then {bombRuns = _varValue; publicVariable "bombRuns"};
 	if (_varName == 'nextTick') then {nextTick = time + _varValue};
 	if (_varName == 'membersX') then {membersX = +_varValue; publicVariable "membersX"};
-	if (_varName == 'smallCAmrk') then {smallCAmrk = +_varValue};
-	if (_varName == 'mrkNATO') then {{sidesX setVariable [_x,Occupants,true]} forEach _varValue;};
-	if (_varName == 'mrkCSAT') then {{sidesX setVariable [_x,Invaders,true]} forEach _varValue;};
-	if (_varName == 'mrkSDK') then {{sidesX setVariable [_x,teamPlayer,true]} forEach _varValue;};
+	if (_varName == 'smallCAmrk') then {};		// Ignore. These are not persistent.
+	if (_varName == 'mrkNATO') then {{sidesX setVariable [[_x] call _translateMarker,Occupants,true]} forEach _varValue;};
+	if (_varName == 'mrkCSAT') then {{sidesX setVariable [[_x] call _translateMarker,Invaders,true]} forEach _varValue;};
+	if (_varName == 'mrkSDK') then {{sidesX setVariable [[_x] call _translateMarker,teamPlayer,true]} forEach _varValue;};
 	if (_varName == 'controlsSDK') then {
 		{
 			sidesX setVariable [_x,teamPlayer,true]
@@ -56,8 +58,21 @@ if (_varName in specialVarLoads) then {
 	};
 	if (_varName == 'chopForest') then {chopForest = _varValue; publicVariable "chopForest"};
 	if (_varName == 'jna_dataList') then {jna_dataList = +_varValue};
-	if (_varName == 'prestigeNATO') then {prestigeNATO = _varValue; publicVariable "prestigeNATO"};
-	if (_varName == 'prestigeCSAT') then {prestigeCSAT = _varValue; publicVariable "prestigeCSAT"};
+	//Keeping these for older saves
+	if (_varName == 'prestigeNATO') then {[Occupants, _varValue, 120] call A3A_fnc_addAggression};
+	if (_varName == 'prestigeCSAT') then {[Invaders, _varValue, 120] call A3A_fnc_addAggression};
+	if (_varName == 'aggressionOccupants') then
+	{
+		aggressionLevelOccupants = _varValue select 0;
+		aggressionStackOccupants = +(_varValue select 1);
+		[true] spawn A3A_fnc_calculateAggression;
+	};
+	if (_varName == 'aggressionInvaders') then
+	{
+		aggressionLevelInvaders = _varValue select 0;
+		aggressionStackInvaders = +(_varValue select 1);
+		[true] spawn A3A_fnc_calculateAggression;
+	};
 	if (_varName == 'hr') then {server setVariable ["HR",_varValue,true]};
 	if (_varName == 'dateX') then {setDate _varValue};
 	if (_varName == 'weather') then {
@@ -75,28 +90,34 @@ if (_varName in specialVarLoads) then {
 				_costs = round (_costs + (_costs * (_i/280)));
 			};
 			server setVariable [_x,_costs,true];
-		} forEach soldiersSDK;
+		} forEach (FactionGet(reb,"groups") get "soldiers");
 	};
-	if (_varName == 'distanceSPWN') then {distanceSPWN = _varValue; distanceSPWN1 = distanceSPWN * 1.3; distanceSPWN2 = distanceSPWN /2; publicVariable "distanceSPWN";publicVariable "distanceSPWN1";publicVariable "distanceSPWN2"};
-	if (_varName == 'civPerc') then {civPerc = _varValue; if (civPerc < 1) then {civPerc = 35}; publicVariable "civPerc"};
-	if (_varName == 'maxUnits') then {maxUnits=_varValue; publicVariable "maxUnits"};
-	if (_varName == 'vehInGarage') then {vehInGarage= +_varValue; publicVariable "vehInGarage"};
+    if (_varname == "HR_Garage") then {
+        [_varValue] call HR_GRG_fnc_loadSaveData;
+    };
+	if (_varName == 'vehInGarage') then { //convert old garage to new garage
+        vehInGarage= [];
+        publicVariable "vehInGarage";
+        [_varValue, ""] call HR_GRG_fnc_addVehiclesByClass;
+    };
 	if (_varName == 'destroyedBuildings') then {
-		destroyedBuildings= +_varValue;
-		//publicVariable "destroyedBuildings";
-		private _building = objNull;
 		{
-			_building = nearestObject [_x, "House"];
-			if !(_building in antennas) then {
+			// nearestObject sometimes picks the wrong building and is several times slower
+			// Example: Livonia Land_Cargo_Tower_V2_F at [6366.63,3880.88,0] ATL
+
+			private _building = nearestObjects [_x, ["House"], 1, true] select 0;
+			call {
+				if (isNil "_building") exitWith { Error("No building found at %1", _x)};
+				if (_building in antennas) exitWith { Info("Antenna in destroyed building list, ignoring")};
+
 				private _ruin = [_building] call BIS_fnc_createRuin;
-				//JIP on the _ruin, as repairRuinedBuilding will delete the ruin.
-				if !(isNull _ruin) then {
-					[_building, true] remoteExec ["hideObject", 0, _ruin];
-				} else {
-					diag_log format ["Loading Destroyed Buildings: Unable to create ruin for %1", typeOf _building];
+				if (isNull _ruin) exitWith {
+					Error_1("Loading Destroyed Buildings: Unable to create ruin for %1", typeOf _building);
 				};
+
+				destroyedBuildings pushBack _building;
 			};
-		} forEach destroyedBuildings;
+		} forEach _varValue;
 	};
 	if (_varName == 'minesX') then {
 		for "_i" from 0 to (count _varvalue) - 1 do {
@@ -120,8 +141,10 @@ if (_varName in specialVarLoads) then {
 		};
 	};
 	if (_varName == 'garrison') then {
-		//_markersX = markersX - outpostsFIA - controlsX - citiesX;
-		{garrison setVariable [_x select 0,_x select 1,true]} forEach _varvalue;
+		{
+			garrison setVariable [[_x select 0] call _translateMarker, _x select 1, true];
+			if (count _x > 2) then { garrison setVariable [(_x select 0) + "_lootCD", _x select 2, true] };
+		} forEach _varvalue;
 	};
 	if (_varName == 'wurzelGarrison') then {
 		{
@@ -140,7 +163,7 @@ if (_varName in specialVarLoads) then {
 				_mrk setMarkerShape "ICON";
 				_mrk setMarkerType "loc_bunker";
 				_mrk setMarkerColor colorTeamPlayer;
-				if (isOnRoad _positionX) then {_mrk setMarkerText format ["%1 Roadblock",nameTeamPlayer]} else {_mrk setMarkerText format ["%1 Watchpost",nameTeamPlayer]};
+				if (isOnRoad _positionX) then {_mrk setMarkerText format ["%1 Roadblock",FactionGet(reb,"name")]} else {_mrk setMarkerText format ["%1 Watchpost",FactionGet(reb,"name")]};
 				spawner setVariable [_mrk,2,true];
 				if (count _garrison > 0) then {garrison setVariable [_mrk,_garrison,true]};
 				outpostsFIA pushBack _mrk;
@@ -165,7 +188,7 @@ if (_varName in specialVarLoads) then {
 				//JIP on the _ruin, as repairRuinedBuilding will delete the ruin.
 				[_antenna, true] remoteExec ["hideObject", 0, _ruin];
 			} else {
-				diag_log format ["Loading Antennas: Unable to create ruin for %1", typeOf _antenna];
+				Error("Loading Antennas: Unable to create ruin for %1", typeOf _antenna);
 			};
 
 			deleteMarker _mrk;
@@ -246,7 +269,7 @@ if (_varName in specialVarLoads) then {
 			_posVeh = _varvalue select _i select 1;
 			_xVectorUp = _varvalue select _i select 2;
 			_xVectorDir = _varvalue select _i select 3;
-			private _veh = createVehicle [_typeVehX,[0,0,1000],[],0,"NONE"];
+			private _veh = createVehicle [_typeVehX,[0,0,1000],[],0,"CAN_COLLIDE"];
 			// This is only here to handle old save states. Could be removed after a few version itterations. -Hazey
 			if ((_varvalue select _i select 2) isEqualType 0) then { // We have to check number because old save state might still be using getDir. -Hazey
 				_dirVeh = _varvalue select _i select 2;
@@ -254,28 +277,46 @@ if (_varName in specialVarLoads) then {
 				_veh setVectorUp surfaceNormal (_posVeh);
 				_veh setPosATL _posVeh;
 			} else {
-				_veh setPosATL _posVeh;
+				if (A3A_saveVersion >= 20401) then { _veh setPosWorld _posVeh } else { _veh setPosATL _posVeh };
 				_veh setVectorDirAndUp [_xVectorDir,_xVectorUp];
 			};
+			[_veh, teamPlayer] call A3A_fnc_AIVEHinit;
 			if ((_veh isKindOf "StaticWeapon") or (_veh isKindOf "Building")) then {
 				staticsToSave pushBack _veh;
+			}
+			else {
+				[_veh] spawn A3A_fnc_vehDespawner;
 			};
-			[_veh] call A3A_fnc_AIVEHinit;
 		};
 		publicVariable "staticsToSave";
 	};
 	if (_varname == 'tasks') then {
 		{
 			if (_x == "rebelAttack") then {
-				[] call A3A_fnc_rebelAttack;
+                if(attackCountdownInvaders > attackCountdownOccupants) then
+                {
+                    [Invaders] spawn A3A_fnc_rebelAttack;
+                }
+                else
+                {
+                    [Occupants] spawn A3A_fnc_rebelAttack;
+                };
 			} else {
 				if (_x == "DEF_HQ") then {
 					[] spawn A3A_fnc_attackHQ;
 				} else {
-					[_x,true] call A3A_fnc_missionRequest;
+					[_x,clientOwner,true] call A3A_fnc_missionRequest;
 				};
 			};
 		} forEach _varvalue;
+	};
+	if(_varname == 'testingTimerIsActive') then
+	{
+		if(_varValue) then
+		{
+			[] spawn A3A_fnc_startTestingTimer;
+		};
+		testingTimerIsActive = _varValue;
 	};
 } else {
 	call compile format ["%1 = %2",_varName,_varValue];

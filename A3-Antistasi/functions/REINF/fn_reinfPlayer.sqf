@@ -11,8 +11,7 @@ if (player != leader group player) exitWith {["AI Recruitment", "You cannot recr
 private _hr = server getVariable "hr";
 
 if (_hr < 1) exitWith {["AI Recruitment", "You do not have enough HR for this request"] call A3A_fnc_customHint;};
-private _arraytypeUnit = _this select 0;
-private _typeUnit = _arraytypeUnit select 0;
+private _typeUnit = _this select 0;
 private _costs = server getVariable _typeUnit;
 private _resourcesFIA = 0;
 if (!isMultiPlayer) then {_resourcesFIA = server getVariable "resourcesFIA"} else {_resourcesFIA = player getVariable "moneyX";};
@@ -28,7 +27,6 @@ if (!isMultiPlayer) then {
 } else {
 	_nul = [-1, 0] remoteExec ["A3A_fnc_resourcesFIA",2];
 	[- _costs] call A3A_fnc_resourcesPlayer;
-	["moneyX",player getVariable ["moneyX",0]] call A3A_fnc_setStatVariable;
 	["AI Recruitment", "Soldier Recruited.<br/><br/>Remember: if you use the group menu to switch groups you will lose control of your recruited AI"] call A3A_fnc_customHint;
 };
 
