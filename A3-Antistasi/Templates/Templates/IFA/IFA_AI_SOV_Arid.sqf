@@ -199,7 +199,7 @@ _militaryLoadoutData set ["carbines", [["LIB_SVT_40", "", "", "", ["LIB_10Rnd_76
 _militaryLoadoutData set ["grenadeLaunchers", [["LIB_M9130_DYAKONOV", "LIB_ACC_GL_DYAKONOV_Empty", "", "", ["LIB_5Rnd_762x54"], ["LIB_1Rnd_G_DYAKONOV"], ""]]];
 _militaryLoadoutData set ["SMGs", [["LIB_PPSh41_m", "", "", "", ["LIB_35Rnd_762x25_t"], [], ""],
         ["LIB_PPSh41_d", "", "", "", ["LIB_71Rnd_762x25_t2"], [], ""]]];
-_militaryLoadoutData set ["machineGuns", [["LIB_DT", "", "", "", ["LIB_63Rnd_762_54"], [], ""],
+_militaryLoadoutData set ["machineGuns", [["LIB_DT", "", "", "", ["LIB_63Rnd_762x54"], [], ""],
         ["LIB_DP28", "", "", "", ["LIB_47Rnd_762x54"], [], ""]]];
 _militaryLoadoutData set ["marksmanRifles", [["LIB_SVT_40", "", "", "", ["LIB_10Rnd_762x54"], [], ""],
         ["LIB_M9130", "", "", "", ["LIB_5Rnd_762x54"], [], ""]]];
